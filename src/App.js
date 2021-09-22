@@ -1,20 +1,19 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import UserCreate from "./pages/User/Create";
 
 function App() {
-	const [listOfUsers, setListOfUsers] = useState([]);
-
-	useEffect(() => {
-		axios.get("http://localhost:3001/api/users").then((response) => {
-			setListOfUsers(response.data.data);
-		});
-	}, []);
-
 	return (
 		<div>
-			{listOfUsers.map((value, key) => {
-				return <div>{value.firstName}</div>;
-			})}
+			<Router>
+				<Link to="/">Dashboard</Link>
+				<Link to="/users/create">Create User</Link>
+				<Switch>
+					<Route path="/" exact component={Dashboard} />
+					<Route path="/users/create" exact component={UserCreate} />
+				</Switch>
+			</Router>
 		</div>
 	);
 }
