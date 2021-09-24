@@ -1,19 +1,16 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import UserCreate from "./pages/User/Create";
+import "./styles/tailwind.css";
+import { BrowserRouter } from "react-router-dom";
+import Header from "./components/Header";
+import RoutesIndex from "./routes/index";
 
 function App() {
 	return (
-		<div>
-			<Router>
-				<Link to="/">Dashboard</Link>
-				<Link to="/users/create">Create User</Link>
-				<Switch>
-					<Route path="/" exact component={Dashboard} />
-					<Route path="/users/create" exact component={UserCreate} />
-				</Switch>
-			</Router>
+		<div className="font-display">
+			<BrowserRouter>
+				<Header />
+				<RoutesIndex />
+			</BrowserRouter>
 		</div>
 	);
 }

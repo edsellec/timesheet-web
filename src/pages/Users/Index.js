@@ -3,8 +3,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
-function Home() {
-	const [dateToday, setDateToday] = useState(moment().format("dddd, MMMM D"));
+function Index() {
 	let history = useHistory();
 
 	// useEffect(() => {
@@ -56,45 +55,16 @@ function Home() {
 				<div className="block sm:w-5/6 mx-auto items-center">
 					<div className="flex w-full justify-between py-4">
 						<div className="whitespace-pre text-3xl font-bold">
-							Dashboard
-						</div>
-						<div className="whitespace-pre font-bold">
-							{dateToday}
+							Users
 						</div>
 					</div>
 				</div>
 			</div>
 			<div className="w-full bg-white py-4">
 				<div className="block sm:w-5/6 mx-auto items-center">
-					<div className="flex w-full justify-between space-x-6 py-4">
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
-								Logged on time
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{3}
-							</div>
-						</div>
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
-								Tardy
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{3}
-							</div>
-						</div>
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
-								Absent
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{3}
-							</div>
-						</div>
-					</div>
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
-							Active users
+							Users
 						</div>
 						<div className="w-full rounded py-5">
 							<div className="w-full border rounded">
@@ -159,14 +129,6 @@ function Home() {
 										</div>
 									);
 								})}
-								<button
-									onClick={() => history.push("/users/")}
-									className="w-full py-3 px-5 border-t hover:bg-gray-100 hover:underline"
-								>
-									<div className="whitespace-pre text-base font-bold text-center">
-										See more
-									</div>
-								</button>
 							</div>
 						</div>
 					</div>
@@ -176,4 +138,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default Index;

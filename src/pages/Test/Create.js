@@ -1,9 +1,11 @@
 import React from "react";
-import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import axios from "axios";
 import * as Yup from "yup";
 
 function Create() {
+	const history = useHistory();
 	const initialValues = {
 		firstName: "",
 		lastName: "",
@@ -43,7 +45,8 @@ function Create() {
 
 	const onSubmit = (data) => {
 		axios.post("http://localhost:3001/api/users", data).then((response) => {
-			console.log("Successfully created an account!");
+			// console.log("Successfully created an account!");
+			history.push("/");
 		});
 	};
 
