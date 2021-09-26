@@ -7,20 +7,20 @@ function Index() {
 	const testData = [
 		{
 			id: 1,
-			name: "TLE-A",
-			userCount: 5,
+			code: "TEACH",
+			description: "Teaching-related activities",
 			dateCreated: "Sept 8, 2021 07:43 AM",
 		},
 		{
 			id: 2,
-			name: "TLE-B",
-			userCount: 3,
+			code: "MEET",
+			description: "Meetings, seminars, and meetup-related activities",
 			dateCreated: "Sept 8, 2021 07:43 AM",
 		},
 		{
 			id: 3,
-			name: "TLE-C",
-			userCount: 10,
+			code: "PREP",
+			description: "Preparation of exams, quizzes, and projects",
 			dateCreated: "Sept 8, 2021 07:43 AM",
 		},
 	];
@@ -31,15 +31,15 @@ function Index() {
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full justify-between py-4">
 						<div className="whitespace-pre text-3xl font-bold">
-							Teams
+							Tasks
 						</div>
 						<div className="whitespace-pre font-bold">
 							<button
-								onClick={() => history.push("/teams/create")}
+								onClick={() => history.push("/tasks/create")}
 								className="w-full py-3 px-5 rounded text-white bg-black hover:underline"
 							>
 								<div className="whitespace-pre text-base font-bold text-center">
-									Create a team
+									Create new task
 								</div>
 							</button>
 						</div>
@@ -50,7 +50,7 @@ function Index() {
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
-							Active teams
+							Active tasks
 						</div>
 						<div className="w-full py-5">
 							<div className="w-full border rounded">
@@ -58,11 +58,11 @@ function Index() {
 									<div className="col-span-1 whitespace-pre text-base text-gray-400">
 										No.
 									</div>
-									<div className="col-span-8 whitespace-pre text-base text-gray-400">
-										Team name
+									<div className="col-span-6 whitespace-pre text-base text-gray-400">
+										Project code
 									</div>
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										# of users
+									<div className="col-span-3 whitespace-pre text-base text-gray-400">
+										Project description
 									</div>
 									<div className="col-span-2 whitespace-pre text-base text-gray-400">
 										Date created
@@ -88,11 +88,11 @@ function SingleRow({ value }) {
 			<div className="col-span-1 whitespace-pre text-base">
 				{value.id}
 			</div>
-			<div className="col-span-8 whitespace-pre text-base">
-				{value.name}
+			<div className="col-span-6 whitespace-pre text-base">
+				{value.code}
 			</div>
-			<div className="col-span-1 whitespace-pre text-base">
-				{value.userCount}
+			<div className="col-span-3 whitespace-pre text-base">
+				{value.description}
 			</div>
 			<div className="col-span-2 whitespace-pre text-base">
 				{value.dateCreated}

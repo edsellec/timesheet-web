@@ -5,7 +5,7 @@ function Header() {
 	return (
 		<header className="w-screen">
 			<div className="w-full bg-white py-4 border-b">
-				<div className="flex sm:w-5/6 mx-auto items-center space-x-24">
+				<div className="flex sm:w-2/3 mx-auto items-center space-x-24">
 					<div className="whitespace-pre font-bold text-xl">
 						Timelycord
 					</div>
@@ -17,10 +17,10 @@ function Header() {
 							Dashboard
 						</Link>
 						<Link
-							to="/projects"
+							to="/timesheet"
 							className="whitespace-pre font-bold hover:underline"
 						>
-							Projects
+							Timesheet
 						</Link>
 						<Link
 							to="/teams"
@@ -35,10 +35,10 @@ function Header() {
 							Users
 						</Link>
 						<Link
-							to="/timesheet"
+							to="/tasks"
 							className="whitespace-pre font-bold hover:underline"
 						>
-							Timesheet
+							Tasks
 						</Link>
 					</div>
 				</div>

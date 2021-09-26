@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import moment from "moment";
+import { TableMini } from "./../components/";
 
 function Home() {
 	const [dateToday, setDateToday] = useState(moment().format("dddd, MMMM D"));
@@ -20,7 +21,28 @@ function Home() {
 	// 	return () => clearInterval(interval);
 	// }, []);
 
-	const testData = [
+	const testDataTeams = [
+		{
+			id: 1,
+			name: "TLE-A",
+			userCount: 5,
+			dateCreated: "Sept 8, 2021 07:43 AM",
+		},
+		{
+			id: 2,
+			name: "TLE-B",
+			userCount: 3,
+			dateCreated: "Sept 8, 2021 07:43 AM",
+		},
+		{
+			id: 3,
+			name: "TLE-C",
+			userCount: 10,
+			dateCreated: "Sept 8, 2021 07:43 AM",
+		},
+	];
+
+	const testDataUsers = [
 		{
 			id: 1,
 			name: "Cadenas, Edselle",
@@ -53,7 +75,7 @@ function Home() {
 	return (
 		<section className="w-screen">
 			<div className="w-full bg-white py-4 border-b">
-				<div className="block sm:w-5/6 mx-auto items-center">
+				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full justify-between py-4">
 						<div className="whitespace-pre text-3xl font-bold">
 							Dashboard
@@ -65,7 +87,7 @@ function Home() {
 				</div>
 			</div>
 			<div className="w-full bg-white py-4">
-				<div className="block sm:w-5/6 mx-auto items-center">
+				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full justify-between space-x-6 py-4">
 						<div className="w-full block border rounded p-5">
 							<div className="whitespace-pre text-base uppercase">
@@ -92,84 +114,18 @@ function Home() {
 							</div>
 						</div>
 					</div>
-					<div className="block w-full py-4">
-						<div className="whitespace-pre text-lg font-bold">
-							Active users
-						</div>
-						<div className="w-full rounded py-5">
-							<div className="w-full border rounded">
-								<div className="w-full grid grid-cols-12 gap-6 py-3 px-5">
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										ID
-									</div>
-									<div className="col-span-5 whitespace-pre text-base text-gray-400">
-										Name
-									</div>
-									<div className="col-span-2 whitespace-pre text-base text-gray-400">
-										Team
-									</div>
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										Time started
-									</div>
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										Hours logged in
-									</div>
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										Minutes tardy
-									</div>
-									<div className="col-span-1 whitespace-pre text-base text-gray-400">
-										Status
-									</div>
-								</div>
-								{testData.map((value, key) => {
-									return (
-										<div
-											key={key}
-											className="w-full grid grid-cols-12 gap-6 py-3 px-5 border-t hover:bg-gray-100"
-										>
-											<div className="col-span-1 whitespace-pre text-base">
-												{value.id}
-											</div>
-											<div className="col-span-5 whitespace-pre text-base">
-												{value.name}
-											</div>
-											<div className="col-span-2 whitespace-pre text-base">
-												{value.team}
-											</div>
-											<div className="col-span-1 whitespace-pre text-base">
-												{value.timeStarted}
-											</div>
-											<div className="col-span-1 whitespace-pre text-base">
-												{value.hoursLoggedIn}
-											</div>
-											<div className="col-span-1 whitespace-pre text-base">
-												{value.minutesTardy}
-											</div>
-											<div className="col-span-1 whitespace-pre text-base">
-												{value.status ? (
-													<span className="bg-green-600 text-white py-1 px-2 rounded">
-														Active
-													</span>
-												) : (
-													<span className="bg-red-600 text-white py-1 px-2 rounded">
-														Inactive
-													</span>
-												)}
-											</div>
-										</div>
-									);
-								})}
-								<button
-									onClick={() => history.push("/users/")}
-									className="w-full py-3 px-5 border-t hover:bg-gray-100 hover:underline"
-								>
-									<div className="whitespace-pre text-base font-bold text-center">
-										See more
-									</div>
-								</button>
-							</div>
-						</div>
-					</div>
+					<TableMini
+						type={"Teams"}
+						title={"Active teams"}
+						data={testDataTeams}
+						history={history}
+					/>
+					<TableMini
+						type={"Users"}
+						title={"Active users"}
+						data={testDataUsers}
+						history={history}
+					/>
 				</div>
 			</div>
 		</section>
