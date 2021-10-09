@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 
-function Create() {
+const Create = () => {
 	const history = useHistory();
 	const initialValues = {
 		firstName: "",
@@ -45,7 +45,7 @@ function Create() {
 
 	const onSubmit = (data) => {
 		axios.post("http://localhost:3001/api/users", data).then((response) => {
-			// console.log("Successfully created an account!");
+			console.log(response);
 			history.push("/users/");
 		});
 	};
@@ -179,6 +179,6 @@ function Create() {
 			</div>
 		</section>
 	);
-}
+};
 
 export default Create;

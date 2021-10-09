@@ -1,9 +1,9 @@
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 
-function TableMini({ type, title, data, history }) {
+const TableMini = ({ type, title, data, history }) => {
 	return (
-		<div className="block w-full py-4">
+		<div className="block w-1/2 py-4">
 			<div className="whitespace-pre text-lg font-bold">{title}</div>
 			<div className="w-full rounded py-5">
 				<div className="w-full border rounded">
@@ -25,6 +25,6 @@ function TableMini({ type, title, data, history }) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default TableMini;

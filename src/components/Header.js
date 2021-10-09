@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Header() {
+const Header = () => {
 	return (
 		<header className="w-screen">
 			<div className="w-full bg-white py-4 border-b">
@@ -17,16 +17,16 @@ function Header() {
 							Dashboard
 						</Link>
 						<Link
-							to="/timesheet"
+							to="/timesheets"
 							className="whitespace-pre font-bold hover:underline"
 						>
 							Timesheet
 						</Link>
 						<Link
-							to="/teams"
+							to="/groups"
 							className="whitespace-pre font-bold hover:underline"
 						>
-							Teams
+							Group
 						</Link>
 						<Link
 							to="/users"
@@ -35,16 +35,16 @@ function Header() {
 							Users
 						</Link>
 						<Link
-							to="/tasks"
+							to="/activities"
 							className="whitespace-pre font-bold hover:underline"
 						>
-							Tasks
+							Activities
 						</Link>
 					</div>
 				</div>
 			</div>
 		</header>
 	);
-}
+};
 
 export default Header;

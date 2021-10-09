@@ -4,34 +4,26 @@ import Dashboard from "./../pages/Dashboard";
 
 import TimesheetIndex from "../pages/Timesheet/Index";
 
-import TeamIndex from "../pages/Teams/Index";
+import GroupIndex from "../pages/Group/Index";
 
-import UserIndex from "../pages/Users/Index";
-import UserCreate from "../pages/Users/Create";
+import UserIndex from "../pages/User/Index";
+import UserCreate from "../pages/User/Create";
 
-import TaskIndex from "../pages/Tasks/Index";
-
-import TestCreate from "../pages/Test/Create";
-import TestIndex from "../pages/Test/Index";
-import TestView from "../pages/Test/View";
+import ActivityIndex from "../pages/Activity/Index";
 
 function Index() {
 	return (
 		<Switch>
 			<Route path="/" exact component={Dashboard} />
 
-			<Route path="/timesheet" exact component={TimesheetIndex} />
+			<Route path="/timesheets" exact component={TimesheetIndex} />
 
-			<Route path="/teams" exact component={TeamIndex} />
+			<Route path="/groups" exact component={GroupIndex} />
 
 			<Route path="/users" exact component={UserIndex} />
 			<Route path="/users/create" exact component={UserCreate} />
 
-			<Route path="/tasks" exact component={TaskIndex} />
-
-			<Route path="/test/create" exact component={TestCreate} />
-			<Route path="/test/" exact component={TestIndex} />
-			<Route path="/test/:id" exact component={TestView} />
+			<Route path="/activities" exact component={ActivityIndex} />
 		</Switch>
 	);
 }

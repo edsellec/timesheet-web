@@ -1,76 +1,127 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 import moment from "moment";
-import { TableMini } from "./../components/";
+import { userFormatList } from "./../utils";
+import { Table } from "./../components/";
 
-function Home() {
-	const [dateToday, setDateToday] = useState(moment().format("dddd, MMMM D"));
-	let history = useHistory();
+const Index = () => {
+	const dateToday = moment().format("dddd, MMMM D");
+	const history = useHistory();
+	const [dataList, setDataList] = useState();
+	const [formattedList, setFormattedList] = useState([]);
+	const [summary, setSummary] = useState({
+		activeUsers: [],
+		onTime: 0,
+		tardy: 0,
+		absent: 0,
+	});
 
-	// useEffect(() => {
-	// 	axios.get("http://localhost:3001/api/users").then((response) => {
-	// 		console.log(response.data);
-	// 	});
-	// }, []);
+	console.log(summary);
 
-	// useEffect(() => { // every second render
-	// 	const interval = setInterval(() => {
-	// 		setDateToday(moment().format("DD MM YYYY hh:mm:ss"));
-	// 	}, 1000);
-	// 	return () => clearInterval(interval);
-	// }, []);
+	useEffect(() => {
+		if (dataList) {
+			setFormattedList(userFormatList(dataList));
+		}
+	}, [dataList]);
 
-	const testDataTeams = [
-		{
-			id: 1,
-			name: "TLE-A",
-			userCount: 5,
-			dateCreated: "Sept 8, 2021 07:43 AM",
-		},
-		{
-			id: 2,
-			name: "TLE-B",
-			userCount: 3,
-			dateCreated: "Sept 8, 2021 07:43 AM",
-		},
-		{
-			id: 3,
-			name: "TLE-C",
-			userCount: 10,
-			dateCreated: "Sept 8, 2021 07:43 AM",
-		},
-	];
+	useEffect(() => {
+		if (formattedList) {
+			setSummary({
+				...summary,
+				activeUsers: formattedList.filter(
+					(row) =>
+						row.user.attendance_today &&
+						row.user.attendance_today.started_at &&
+						row.user.attendance_today.ended_at === null
+				),
+				onTime: formattedList.filter(
+					(row) =>
+						row.user.attendance_today &&
+						moment(row.user.attendance_today.started_at).isBefore(
+							moment(
+								moment(new Date()).set({
+									hour: 7,
+									minute: 31,
+									seconds: 0,
+									milliseconds: 0,
+								})
+							)
+						)
+				).length,
+				tardy: formattedList.filter(
+					(row) =>
+						row.user.attendance_today &&
+						row.user.attendance_today.duration_late
+				).length,
+				absent: formattedList.filter(
+					(row) => !row.user.attendance_today
+				).length,
+			});
+		}
+	}, [formattedList]);
 
-	const testDataUsers = [
-		{
-			id: 1,
-			name: "Cadenas, Edselle",
-			team: "TLE-A",
-			timeStarted: "07:43 AM",
-			hoursLoggedIn: "10:12",
-			minutesTardy: "--:--",
-			status: 1,
-		},
-		{
-			id: 2,
-			name: "Sample, Test",
-			team: "TLE-B",
-			timeStarted: "07:43 AM",
-			hoursLoggedIn: "10:12",
-			minutesTardy: "--:--",
-			status: 1,
-		},
-		{
-			id: 3,
-			name: "Doe, John",
-			team: "TLE-C",
-			timeStarted: "--:-- --",
-			hoursLoggedIn: "--:--",
-			minutesTardy: "--:--",
-			status: 0,
-		},
-	];
+	useEffect(() => {
+		axios.get("http://localhost:3001/api/users").then((response) => {
+			setDataList(response.data);
+		});
+	}, []);
+
+	const tableConstants = () => {
+		return [
+			{
+				title: "No.",
+				render: (row) => {
+					return <span>{row.user_id}</span>;
+				},
+			},
+			{
+				title: "Name",
+				render: (row) => {
+					return <span>{row.user.formatted_name}</span>;
+				},
+			},
+			{
+				title: "Time started",
+				render: (row) => {
+					return (
+						<span>
+							{row.user.attendance_today &&
+							row.user.attendance_today.started_at
+								? moment(
+										row.user.attendance_today.started_at
+								  ).format("LT")
+								: "--:-- --"}
+						</span>
+					);
+				},
+			},
+			{
+				title: "Status",
+				render: (row) => {
+					return (
+						<span>
+							{row.user.attendance_today ? (
+								row.user.attendance_today.ended_at ? (
+									<span className="bg-red-600 text-white py-1 px-2 rounded">
+										Inactive
+									</span>
+								) : (
+									<span className="bg-green-600 text-white py-1 px-2 rounded">
+										Active
+									</span>
+								)
+							) : (
+								<span className="bg-red-600 text-white py-1 px-2 rounded">
+									Inactive
+								</span>
+							)}
+						</span>
+					);
+				},
+			},
+		];
+	};
 
 	return (
 		<section className="w-screen">
@@ -94,7 +145,7 @@ function Home() {
 								Logged on time
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
-								{3}
+								{summary.onTime}
 							</div>
 						</div>
 						<div className="w-full block border rounded p-5">
@@ -102,7 +153,7 @@ function Home() {
 								Tardy
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
-								{3}
+								{summary.tardy}
 							</div>
 						</div>
 						<div className="w-full block border rounded p-5">
@@ -110,26 +161,35 @@ function Home() {
 								Absent
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
-								{3}
+								{summary.absent}
 							</div>
 						</div>
 					</div>
-					<TableMini
-						type={"Teams"}
-						title={"Active teams"}
-						data={testDataTeams}
-						history={history}
-					/>
-					<TableMini
-						type={"Users"}
-						title={"Active users"}
-						data={testDataUsers}
-						history={history}
-					/>
+					<div className="flex w-full space-x-6">
+						<div className="block w-full py-4">
+							<div className="whitespace-pre text-lg font-bold">
+								Active users today
+							</div>
+							<div className="w-full rounded py-5">
+								<Table
+									cols={tableConstants()}
+									rows={summary.activeUsers}
+								/>
+								<button
+									onClick={() => history.push("/users")}
+									className="w-full py-2 px-5 border-l border-b border-r hover:bg-gray-100 hover:underline"
+								>
+									<div className="whitespace-pre text-base font-bold text-center">
+										See more
+									</div>
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
 	);
-}
+};
 
-export default Home;
+export default Index;

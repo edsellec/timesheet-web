@@ -2,25 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { timesheetFormatList } from "./../../utils";
+import { groupFormatList } from "./../../utils";
 import { Table } from "./../../components/index";
 
 const Index = () => {
 	let history = useHistory();
-	const dateToday = moment().format("dddd, MMMM D");
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
 	const [modalData, setModalData] = useState({});
-	console.log(modalData);
 
 	useEffect(() => {
 		if (dataList) {
-			setFormattedList(timesheetFormatList(dataList));
+			setFormattedList(groupFormatList(dataList));
 		}
 	}, [dataList]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/api/timesheets").then((response) => {
+		axios.get("http://localhost:3001/api/groups").then((response) => {
 			setDataList(response.data);
 		});
 	}, []);
@@ -30,25 +28,37 @@ const Index = () => {
 			{
 				title: "No.",
 				render: (row) => {
-					return <span>{row.user_id}</span>;
+					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Name",
+				title: "Group code",
 				render: (row) => {
-					return <span>{row.user.formatted_name}</span>;
+					return <span>{row.code}</span>;
 				},
 			},
 			{
-				title: "Group",
+				title: "Description",
 				render: (row) => {
-					return <span>{row.group.code}</span>;
+					return <span>{row.description}</span>;
 				},
 			},
 			{
-				title: "Hours worked",
+				title: "Member count",
 				render: (row) => {
-					return <span>{row.user.hours_worked}</span>;
+					return <span>{row.user.length}</span>;
+				},
+			},
+			{
+				title: "Date created",
+				render: (row) => {
+					return (
+						<span>
+							{row.created_at
+								? moment(row.created_at).format("lll")
+								: "--:-- --"}
+						</span>
+					);
 				},
 			},
 			{
@@ -81,7 +91,17 @@ const Index = () => {
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full justify-between py-4">
 						<div className="whitespace-pre text-3xl font-bold">
-							Timesheet
+							Groups
+						</div>
+						<div className="whitespace-pre font-bold">
+							<button
+								onClick={() => history.push("/users/create")}
+								className="w-full py-3 px-5 rounded text-white bg-black hover:underline"
+							>
+								<div className="whitespace-pre text-base font-bold text-center">
+									Add a group
+								</div>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -90,7 +110,7 @@ const Index = () => {
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
-							Submitted on {dateToday}
+							Active groups
 						</div>
 						<div className="w-full py-5">
 							<Table
@@ -121,21 +141,9 @@ const Modal = ({ props, handleClose }) => {
 				},
 			},
 			{
-				title: "Description",
+				title: "Name",
 				render: (row) => {
-					return <span>{row.description}</span>;
-				},
-			},
-			{
-				title: "Activity code",
-				render: (row) => {
-					return <span>{row.activity.code}</span>;
-				},
-			},
-			{
-				title: "Hours worked",
-				render: (row) => {
-					return <span>{row.hours_worked}</span>;
+					return <span>{row.formatted_name}</span>;
 				},
 			},
 		];
@@ -148,7 +156,7 @@ const Modal = ({ props, handleClose }) => {
 				<div className="block w-full">
 					<div className="flex w-full justify-between items-center">
 						<div className="whitespace-pre text-lg font-bold">
-							Timesheet for {props.user.formatted_name}
+							Active members of {props.code}
 						</div>
 						<div className="whitespace-pre font-bold">
 							<button
@@ -168,10 +176,7 @@ const Modal = ({ props, handleClose }) => {
 						</div>
 					</div>
 					<div className="w-full py-5">
-						<Table
-							cols={tableConstants()}
-							rows={props.user.timesheet}
-						/>
+						<Table cols={tableConstants()} rows={props.user} />
 					</div>
 				</div>
 			</div>
