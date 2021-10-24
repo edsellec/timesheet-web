@@ -9,6 +9,7 @@ const Index = () => {
 	let history = useHistory();
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
+	console.log(formattedList);
 
 	useEffect(() => {
 		if (dataList) {
@@ -27,13 +28,13 @@ const Index = () => {
 			{
 				title: "No.",
 				render: (row) => {
-					return <span>{row.user_id}</span>;
+					return <span>{row.id}</span>;
 				},
 			},
 			{
 				title: "Name",
 				render: (row) => {
-					return <span>{row.user.formatted_name}</span>;
+					return <span>{row.formatted_name}</span>;
 				},
 			},
 			{
@@ -47,10 +48,10 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today &&
-							row.user.attendance_today.started_at
+							{row.attendance_today &&
+							row.attendance_today.started_at
 								? moment(
-										row.user.attendance_today.started_at
+										row.attendance_today.started_at
 								  ).format("LT")
 								: "--:-- --"}
 						</span>
@@ -62,11 +63,11 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today &&
-							row.user.attendance_today.ended_at
-								? moment(
-										row.user.attendance_today.ended_at
-								  ).format("LT")
+							{row.attendance_today &&
+							row.attendance_today.ended_at
+								? moment(row.attendance_today.ended_at).format(
+										"LT"
+								  )
 								: "--:-- --"}
 						</span>
 					);
@@ -77,8 +78,8 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today
-								? row.user.attendance_today.duration_logged_in
+							{row.attendance_today
+								? row.attendance_today.duration_logged_in
 								: "--:--"}
 						</span>
 					);
@@ -89,9 +90,9 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today &&
-							row.user.attendance_today.duration_late
-								? row.user.attendance_today.duration_late
+							{row.attendance_today &&
+							row.attendance_today.duration_late
+								? row.attendance_today.duration_late
 								: "--:--"}
 						</span>
 					);
@@ -102,8 +103,8 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today ? (
-								row.user.attendance_today.ended_at ? (
+							{row.attendance_today ? (
+								row.attendance_today.ended_at ? (
 									<span className="bg-red-600 text-white py-1 px-2 rounded">
 										Inactive
 									</span>

@@ -45,8 +45,7 @@ const Create = () => {
 
 	const onSubmit = (data) => {
 		axios.post("http://localhost:3001/api/users", data).then((response) => {
-			console.log(response);
-			history.push("/users/");
+			history.push("/users");
 		});
 	};
 
@@ -75,39 +74,41 @@ const Create = () => {
 										<span>{"#1 "}</span>
 										Enter the account's name
 									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											First Name:
+									<div className="flex w-2/3 pt-4 space-x-4">
+										<div className="w-full pt-4">
+											<div className="whitespace-pre text-base font-bold uppercase">
+												First Name:
+											</div>
+											<Field
+												autoComplete="off"
+												type="text"
+												name="firstName"
+												placeholder="Ex. John"
+												className="w-full bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
+											/>
+											<ErrorMessage
+												name="firstName"
+												component="div"
+												className="whitespace-pre pt-1 text-base text-red-600"
+											/>
 										</div>
-										<Field
-											autoComplete="off"
-											type="text"
-											name="firstName"
-											placeholder="Ex. John"
-											className="w-2/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="firstName"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
-									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											Last Name:
+										<div className="w-full pt-4">
+											<div className="whitespace-pre text-base font-bold uppercase">
+												Last Name:
+											</div>
+											<Field
+												autoComplete="off"
+												type="text"
+												name="lastName"
+												placeholder="Ex. Doe"
+												className="w-full bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
+											/>
+											<ErrorMessage
+												name="lastName"
+												component="div"
+												className="whitespace-pre pt-1 text-base text-red-600"
+											/>
 										</div>
-										<Field
-											autoComplete="off"
-											type="text"
-											name="lastName"
-											placeholder="Ex. Doe"
-											className="w-2/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="lastName"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
 									</div>
 								</div>
 								<div className="w-full block mb-12">

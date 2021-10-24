@@ -4,10 +4,10 @@ export default function formatDataList(data) {
 	let rawDataList = [];
 
 	for (const element of data) {
-		if (element.hasOwnProperty("user")) {
-			let hours_worked = 0;
+		let hours_worked = 0;
 
-			for (const timesheet of element.user.timesheet) {
+		if (element.timesheet.length > 0) {
+			for (const timesheet of element.timesheet) {
 				let timeStarted = moment(timesheet.started_at);
 				let timeEnded = moment(timesheet.ended_at);
 
@@ -16,11 +16,19 @@ export default function formatDataList(data) {
 					.asHours();
 				hours_worked = hours_worked + timesheet.hours_worked;
 			}
-
-			element.user.hours_worked = hours_worked;
-			element.user.formatted_name =
-				element.user.last_name + ", " + element.user.first_name;
 		}
+
+		element.hours_worked = hours_worked;
+		element.formatted_name = element.last_name + ", " + element.first_name;
+
+		if (element.group.length > 0) {
+			for (const group of element.group) {
+				element.group = group;
+			}
+		} else {
+			element.group = {};
+		}
+
 		rawDataList.push(element);
 	}
 

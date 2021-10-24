@@ -11,7 +11,7 @@ const Index = () => {
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
 	const [modalData, setModalData] = useState({});
-	console.log(modalData);
+	console.log(formattedList);
 
 	useEffect(() => {
 		if (dataList) {
@@ -30,13 +30,13 @@ const Index = () => {
 			{
 				title: "No.",
 				render: (row) => {
-					return <span>{row.user_id}</span>;
+					return <span>{row.id}</span>;
 				},
 			},
 			{
 				title: "Name",
 				render: (row) => {
-					return <span>{row.user.formatted_name}</span>;
+					return <span>{row.formatted_name}</span>;
 				},
 			},
 			{
@@ -48,7 +48,7 @@ const Index = () => {
 			{
 				title: "Hours worked",
 				render: (row) => {
-					return <span>{row.user.hours_worked}</span>;
+					return <span>{row.hours_worked}</span>;
 				},
 			},
 			{
@@ -99,7 +99,7 @@ const Index = () => {
 							/>
 						</div>
 						{Object.keys(modalData).length !== 0 && (
-							<Modal
+							<ReadModal
 								props={modalData}
 								handleClose={handleCloseModal}
 							/>
@@ -111,7 +111,7 @@ const Index = () => {
 	);
 };
 
-const Modal = ({ props, handleClose }) => {
+const ReadModal = ({ props, handleClose }) => {
 	const tableConstants = () => {
 		return [
 			{
@@ -143,38 +143,40 @@ const Modal = ({ props, handleClose }) => {
 
 	return (
 		<>
-			<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"></div>
-			<div className="relative bottom-20 mx-auto p-5 border w-auto shadow-lg rounded-md bg-white">
-				<div className="block w-full">
-					<div className="flex w-full justify-between items-center">
-						<div className="whitespace-pre text-lg font-bold">
-							Timesheet for {props.user.formatted_name}
-						</div>
-						<div className="whitespace-pre font-bold">
-							<button
-								onClick={() => handleClose()}
-								className="w-full p-3 rounded"
-							>
-								<svg
-									height="24px"
-									viewBox="0 0 24 24"
-									width="24px"
-									fill="#000000"
+			<div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+				<div className="relative w-1/2 my-6 mx-auto max-w-3xl">
+					<div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+						<div className="flex justify-between px-5 py-3 border-b rounded-t items-center">
+							<div className="whitespace-pre text-lg font-bold">
+								Timesheet for {props.formatted_name}
+							</div>
+							<div className="whitespace-pre font-bold">
+								<button
+									onClick={() => handleClose()}
+									className="w-full p-3 rounded"
 								>
-									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z" />
-								</svg>
-							</button>
+									<svg
+										height="24px"
+										viewBox="0 0 24 24"
+										width="24px"
+										fill="#000000"
+									>
+										<path d="M0 0h24v24H0V0z" fill="none" />
+										<path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z" />
+									</svg>
+								</button>
+							</div>
 						</div>
-					</div>
-					<div className="w-full py-5">
-						<Table
-							cols={tableConstants()}
-							rows={props.user.timesheet}
-						/>
+						<div className="relative px-6 pt-6 pb-12 w-full">
+							<Table
+								cols={tableConstants()}
+								rows={props.timesheet}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
+			<div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
 		</>
 	);
 };

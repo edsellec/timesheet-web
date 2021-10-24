@@ -12,12 +12,10 @@ const Index = () => {
 	const [formattedList, setFormattedList] = useState([]);
 	const [summary, setSummary] = useState({
 		activeUsers: [],
-		onTime: 0,
+		ontime: 0,
 		tardy: 0,
 		absent: 0,
 	});
-
-	console.log(summary);
 
 	useEffect(() => {
 		if (dataList) {
@@ -31,14 +29,14 @@ const Index = () => {
 				...summary,
 				activeUsers: formattedList.filter(
 					(row) =>
-						row.user.attendance_today &&
-						row.user.attendance_today.started_at &&
-						row.user.attendance_today.ended_at === null
+						row.attendance_today &&
+						row.attendance_today.started_at &&
+						row.attendance_today.ended_at === null
 				),
-				onTime: formattedList.filter(
+				ontime: formattedList.filter(
 					(row) =>
-						row.user.attendance_today &&
-						moment(row.user.attendance_today.started_at).isBefore(
+						row.attendance_today &&
+						moment(row.attendance_today.started_at).isBefore(
 							moment(
 								moment(new Date()).set({
 									hour: 7,
@@ -51,12 +49,11 @@ const Index = () => {
 				).length,
 				tardy: formattedList.filter(
 					(row) =>
-						row.user.attendance_today &&
-						row.user.attendance_today.duration_late
+						row.attendance_today &&
+						row.attendance_today.duration_late
 				).length,
-				absent: formattedList.filter(
-					(row) => !row.user.attendance_today
-				).length,
+				absent: formattedList.filter((row) => !row.attendance_today)
+					.length,
 			});
 		}
 	}, [formattedList]);
@@ -72,13 +69,13 @@ const Index = () => {
 			{
 				title: "No.",
 				render: (row) => {
-					return <span>{row.user_id}</span>;
+					return <span>{row.id}</span>;
 				},
 			},
 			{
 				title: "Name",
 				render: (row) => {
-					return <span>{row.user.formatted_name}</span>;
+					return <span>{row.formatted_name}</span>;
 				},
 			},
 			{
@@ -86,10 +83,10 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today &&
-							row.user.attendance_today.started_at
+							{row.attendance_today &&
+							row.attendance_today.started_at
 								? moment(
-										row.user.attendance_today.started_at
+										row.attendance_today.started_at
 								  ).format("LT")
 								: "--:-- --"}
 						</span>
@@ -101,8 +98,8 @@ const Index = () => {
 				render: (row) => {
 					return (
 						<span>
-							{row.user.attendance_today ? (
-								row.user.attendance_today.ended_at ? (
+							{row.attendance_today ? (
+								row.attendance_today.ended_at ? (
 									<span className="bg-red-600 text-white py-1 px-2 rounded">
 										Inactive
 									</span>
@@ -145,7 +142,7 @@ const Index = () => {
 								Logged on time
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
-								{summary.onTime}
+								{summary.ontime}
 							</div>
 						</div>
 						<div className="w-full block border rounded p-5">
