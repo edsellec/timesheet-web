@@ -6,6 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { groupFormatList } from "./../../utils";
 import { Table } from "./../../components/index";
+import { config } from "../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -15,12 +16,6 @@ const Index = () => {
 	const [modalReadData, setModalReadData] = useState({});
 
 	function handleFetchData() {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.get(process.env.REACT_APP_API_URL + "/groups", config)
 			.then((response) => {
@@ -41,31 +36,41 @@ const Index = () => {
 	const tableConstants = ({ handleReadModal, handleUpdateModal }) => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Group code",
+				title: () => {
+					return <span>Group code</span>;
+				},
 				render: (row) => {
 					return <span>{row.code}</span>;
 				},
 			},
 			{
-				title: "Description",
+				title: () => {
+					return <span>Description</span>;
+				},
 				render: (row) => {
 					return <span>{row.description}</span>;
 				},
 			},
 			{
-				title: "Member count",
+				title: () => {
+					return <span>Member count</span>;
+				},
 				render: (row) => {
 					return <span>{row.user.length}</span>;
 				},
 			},
 			{
-				title: "Date created",
+				title: () => {
+					return <span>Date created</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -77,7 +82,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: " ",
+				title: () => {
+					return <span> </span>;
+				},
 				render: (row) => {
 					return (
 						<span className="flex space-x-6 whitespace-pre">
@@ -174,13 +181,17 @@ const ReadModal = ({ props, handleFetchData, handleClose }) => {
 	const tableConstants = () => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Name",
+				title: () => {
+					return <span>Name</span>;
+				},
 				render: (row) => {
 					return <span>{row.formatted_name}</span>;
 				},
@@ -244,12 +255,6 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 	});
 
 	const onSubmit = (data) => {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.put(
 				process.env.REACT_APP_API_URL + "/groups/" + props.id,

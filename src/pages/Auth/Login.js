@@ -8,7 +8,6 @@ const Create = () => {
 	const [status, setStatus] = useState(null);
 	const auth = getAuth();
 	const provider = new GoogleAuthProvider();
-	console.log(process.env.REACT_APP_API_URL);
 
 	const handleLoginWithGoogle = () => {
 		setStatus(null);

@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import { timesheetFormatList } from "./../../utils";
 import { Table } from "./../../components/index";
+import { config } from "../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -19,12 +20,6 @@ const Index = () => {
 	}, [dataList]);
 
 	useEffect(() => {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.get(process.env.REACT_APP_API_URL + "/timesheets", config)
 			.then((response) => {
@@ -35,31 +30,41 @@ const Index = () => {
 	const tableConstants = (handleRowClick) => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Name",
+				title: () => {
+					return <span>Name</span>;
+				},
 				render: (row) => {
 					return <span>{row.formatted_name}</span>;
 				},
 			},
 			{
-				title: "Group",
+				title: () => {
+					return <span>Group</span>;
+				},
 				render: (row) => {
 					return <span>{row.group.code}</span>;
 				},
 			},
 			{
-				title: "Hours worked",
+				title: () => {
+					return <span>Hours worked</span>;
+				},
 				render: (row) => {
 					return <span>{row.hours_worked}</span>;
 				},
 			},
 			{
-				title: " ",
+				title: () => {
+					return <span> </span>;
+				},
 				render: (row) => {
 					return (
 						<button
@@ -122,25 +127,33 @@ const ReadModal = ({ props, handleClose }) => {
 	const tableConstants = () => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Description",
+				title: () => {
+					return <span>Description</span>;
+				},
 				render: (row) => {
 					return <span>{row.description}</span>;
 				},
 			},
 			{
-				title: "Activity code",
+				title: () => {
+					return <span>Activity code</span>;
+				},
 				render: (row) => {
 					return <span>{row.activity.code}</span>;
 				},
 			},
 			{
-				title: "Hours worked",
+				title: () => {
+					return <span>Hours worked</span>;
+				},
 				render: (row) => {
 					return <span>{row.hours_worked}</span>;
 				},

@@ -8,7 +8,7 @@ const Table = ({ cols, rows }) => {
 							key={index}
 							className="px-4 py-2 font-light whitespace-pre text-gray-400"
 						>
-							{headerItem.title}
+							{headerItem.title()}
 						</th>
 					))}
 				</tr>

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
+import { config } from "../../config/request";
 
 const Create = () => {
 	const history = useHistory();
@@ -30,12 +31,6 @@ const Create = () => {
 	});
 
 	const onSubmit = (data) => {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.post(process.env.REACT_APP_API_URL + "/groups", data, config)
 			.then((response) => {

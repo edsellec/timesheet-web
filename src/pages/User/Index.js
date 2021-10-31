@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import { userFormatList } from "./../../utils";
 import { Table } from "./../../components/index";
+import { config } from "../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -17,12 +18,6 @@ const Index = () => {
 	}, [dataList]);
 
 	useEffect(() => {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.get(process.env.REACT_APP_API_URL + "/users", config)
 			.then((response) => {
@@ -33,25 +28,33 @@ const Index = () => {
 	const tableConstants = (handleRowClick) => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Name",
+				title: () => {
+					return <span>Name</span>;
+				},
 				render: (row) => {
 					return <span>{row.formatted_name}</span>;
 				},
 			},
 			{
-				title: "Group",
+				title: () => {
+					return <span>Group</span>;
+				},
 				render: (row) => {
 					return <span>{row.group.code}</span>;
 				},
 			},
 			{
-				title: "Time started",
+				title: () => {
+					return <span>Time started</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -66,7 +69,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: "Time ended",
+				title: () => {
+					return <span>Time ended</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -81,7 +86,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: "Hours active",
+				title: () => {
+					return <span>Hours active</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -93,7 +100,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: "Minutes tardy",
+				title: () => {
+					return <span>Hours tardy</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -106,7 +115,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: "Status",
+				title: () => {
+					return <span>Status</span>;
+				},
 				render: (row) => {
 					return (
 						<span>

@@ -6,6 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { activityFormatList } from "./../../utils";
 import { Table } from "./../../components/index";
+import { config } from "../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -14,12 +15,6 @@ const Index = () => {
 	const [modalData, setModalData] = useState({});
 
 	function handleFetchData() {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.get(process.env.REACT_APP_API_URL + "/activities", config)
 			.then((response) => {
@@ -40,25 +35,33 @@ const Index = () => {
 	const tableConstants = (handleRowClick) => {
 		return [
 			{
-				title: "No.",
+				title: () => {
+					return <span>ID</span>;
+				},
 				render: (row) => {
 					return <span>{row.id}</span>;
 				},
 			},
 			{
-				title: "Code",
+				title: () => {
+					return <span>Code</span>;
+				},
 				render: (row) => {
 					return <span>{row.code}</span>;
 				},
 			},
 			{
-				title: "Description",
+				title: () => {
+					return <span>Description</span>;
+				},
 				render: (row) => {
 					return <span>{row.description}</span>;
 				},
 			},
 			{
-				title: "Date created",
+				title: () => {
+					return <span>Date created</span>;
+				},
 				render: (row) => {
 					return (
 						<span>
@@ -70,7 +73,9 @@ const Index = () => {
 				},
 			},
 			{
-				title: " ",
+				title: () => {
+					return <span> </span>;
+				},
 				render: (row) => {
 					return (
 						<button
@@ -164,12 +169,6 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 	});
 
 	const onSubmit = (data) => {
-		const config = {
-			headers: {
-				Authorization: "Bearer " + window.localStorage.getItem("token"),
-			},
-		};
-
 		axios
 			.put(
 				process.env.REACT_APP_API_URL + "/activities/" + props.id,
