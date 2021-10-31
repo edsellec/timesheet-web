@@ -1,12 +1,12 @@
 const Table = ({ cols, rows }) => {
 	return (
-		<table className="w-full table-auto text-left">
-			<thead className="w-full border">
+		<table style={{ width: "100%" }} className="table-auto text-left">
+			<thead className="border">
 				<tr>
 					{cols.map((headerItem, index) => (
 						<th
 							key={index}
-							className="px-4 py-2 font-normal whitespace-pre text-gray-400"
+							className="px-4 py-2 font-light whitespace-pre text-gray-400"
 						>
 							{headerItem.title}
 						</th>
@@ -19,7 +19,7 @@ const Table = ({ cols, rows }) => {
 						{cols.map((col, key) => (
 							<td
 								key={key}
-								className="px-4 py-2 font-normal whitespace-pre"
+								className="px-4 py-2 font-normal tracking-tight whitespace-nowrap"
 							>
 								{col.render(item)}
 							</td>

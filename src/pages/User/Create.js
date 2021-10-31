@@ -44,9 +44,17 @@ const Create = () => {
 	});
 
 	const onSubmit = (data) => {
-		axios.post("http://localhost:3001/api/users", data).then((response) => {
-			history.push("/users");
-		});
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
+		axios
+			.post(process.env.REACT_APP_API_URL + "/users", data, config)
+			.then((response) => {
+				history.push("/users");
+			});
 	};
 
 	return (
@@ -68,112 +76,150 @@ const Create = () => {
 							onSubmit={onSubmit}
 							validationSchema={validationSchema}
 						>
-							<Form className="w-full block">
-								<div className="w-full block mb-12">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#1 "}</span>
-										Enter the account's name
-									</div>
-									<div className="flex w-2/3 pt-4 space-x-4">
-										<div className="w-full pt-4">
-											<div className="whitespace-pre text-base font-bold uppercase">
-												First Name:
+							{(formik) => {
+								const { errors, touched, isValid, dirty } =
+									formik;
+								return (
+									<Form className="w-full block space-y-12">
+										<div className="w-full block">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#1 "}</span>
+												Enter the account's name
 											</div>
-											<Field
-												autoComplete="off"
-												type="text"
-												name="firstName"
-												placeholder="Ex. John"
-												className="w-full bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-											/>
-											<ErrorMessage
-												name="firstName"
-												component="div"
-												className="whitespace-pre pt-1 text-base text-red-600"
-											/>
-										</div>
-										<div className="w-full pt-4">
-											<div className="whitespace-pre text-base font-bold uppercase">
-												Last Name:
+											<div className="flex w-2/3 pt-4 space-x-4">
+												<div className="w-full pt-4">
+													<div className="whitespace-pre text-base font-bold uppercase">
+														First Name:
+													</div>
+													<Field
+														autoComplete="off"
+														type="text"
+														name="firstName"
+														placeholder="Ex. John"
+														className={
+															"w-full bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+															(errors.firstName &&
+															touched.firstName
+																? " border-red-500"
+																: null)
+														}
+													/>
+													<ErrorMessage
+														name="firstName"
+														component="div"
+														className="whitespace-pre pt-1 text-base text-red-600"
+													/>
+												</div>
+												<div className="w-full pt-4">
+													<div className="whitespace-pre text-base font-bold uppercase">
+														Last Name:
+													</div>
+													<Field
+														autoComplete="off"
+														type="text"
+														name="lastName"
+														placeholder="Ex. Doe"
+														className={
+															"w-full bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+															(errors.lastName &&
+															touched.lastName
+																? " border-red-500"
+																: null)
+														}
+													/>
+													<ErrorMessage
+														name="lastName"
+														component="div"
+														className="whitespace-pre pt-1 text-base text-red-600"
+													/>
+												</div>
 											</div>
-											<Field
-												autoComplete="off"
-												type="text"
-												name="lastName"
-												placeholder="Ex. Doe"
-												className="w-full bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-											/>
-											<ErrorMessage
-												name="lastName"
-												component="div"
-												className="whitespace-pre pt-1 text-base text-red-600"
-											/>
 										</div>
-									</div>
-								</div>
-								<div className="w-full block mb-12">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#2 "}</span>
-										Add a valid email address:
-									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											Email address:
-										</div>
-										<Field
-											autoComplete="off"
-											type="text"
-											name="email"
-											placeholder="Ex. johndoe@gmail.com"
-											className="w-2/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="email"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
-									</div>
-								</div>
-								<div className="w-full block mb-12">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#3 "}</span>
-										Enter a secure password:
-									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											Password
-										</div>
-										<Field
-											autoComplete="off"
-											type="password"
-											name="password"
-											placeholder=""
-											className="w-2/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="password"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
-									</div>
-								</div>
-								<div className="w-full block">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#4 "}</span>
-										Finalize creating the account
-									</div>
-									<div className="w-full pt-4">
-										<button
-											type="submit"
-											className="py-3 px-5 rounded text-white bg-black hover:underline"
-										>
-											<div className="whitespace-pre text-base font-bold text-center">
-												Create an Account
+										<div className="w-full block">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#2 "}</span>
+												Add a valid email address:
 											</div>
-										</button>
-									</div>
-								</div>
-							</Form>
+											<div className="w-full pt-4">
+												<div className="whitespace-pre text-base font-bold uppercase">
+													Email address:
+												</div>
+												<Field
+													autoComplete="off"
+													type="text"
+													name="email"
+													placeholder="Ex. johndoe@gmail.com"
+													className={
+														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+														(errors.email &&
+														touched.email
+															? " border-red-500"
+															: null)
+													}
+												/>
+												<ErrorMessage
+													name="email"
+													component="div"
+													className="whitespace-pre pt-1 text-base text-red-600"
+												/>
+											</div>
+										</div>
+										<div className="w-full block">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#3 "}</span>
+												Enter a secure password:
+											</div>
+											<div className="w-full pt-4">
+												<div className="whitespace-pre text-base font-bold uppercase">
+													Password
+												</div>
+												<Field
+													autoComplete="off"
+													type="password"
+													name="password"
+													placeholder=""
+													className={
+														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+														(errors.password &&
+														touched.password
+															? " border-red-500"
+															: null)
+													}
+												/>
+												<ErrorMessage
+													name="password"
+													component="div"
+													className="whitespace-pre pt-1 text-base text-red-600"
+												/>
+											</div>
+										</div>
+										<div className="w-full block">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#4 "}</span>
+												Finalize creating the account
+											</div>
+											<div className="w-full pt-4">
+												<button
+													type="submit"
+													className={
+														"py-3 px-5 rounded" +
+														(!(dirty && isValid)
+															? "  bg-gray-300 text-gray-500 cursor-not-allowed"
+															: " bg-black text-white hover:bg-gray-900")
+													}
+													disabled={
+														!(dirty && isValid)
+													}
+												>
+													<div className="whitespace-pre font-medium text-center">
+														Create an Account
+													</div>
+												</button>
+											</div>
+										</div>
+									</Form>
+								);
+							}}
 						</Formik>
 					</div>
 				</div>

@@ -59,9 +59,17 @@ const Index = () => {
 	}, [formattedList]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/api/users").then((response) => {
-			setDataList(response.data);
-		});
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
+		axios
+			.get(process.env.REACT_APP_API_URL + "/users", config)
+			.then((response) => {
+				setDataList(response.data);
+			});
 	}, []);
 
 	const tableConstants = () => {
@@ -128,7 +136,7 @@ const Index = () => {
 						<div className="whitespace-pre text-3xl font-bold">
 							Dashboard
 						</div>
-						<div className="whitespace-pre font-bold">
+						<div className="whitespace-pre font-medium">
 							{dateToday}
 						</div>
 					</div>
@@ -138,7 +146,7 @@ const Index = () => {
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full justify-between space-x-6 py-4">
 						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
+							<div className="whitespace-pre font-light text-base uppercase">
 								Logged on time
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
@@ -146,7 +154,7 @@ const Index = () => {
 							</div>
 						</div>
 						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
+							<div className="whitespace-pre font-light text-base uppercase">
 								Tardy
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
@@ -154,7 +162,7 @@ const Index = () => {
 							</div>
 						</div>
 						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre text-base uppercase">
+							<div className="whitespace-pre font-light text-base uppercase">
 								Absent
 							</div>
 							<div className="whitespace-pre text-3xl font-bold">
@@ -176,7 +184,7 @@ const Index = () => {
 									onClick={() => history.push("/users")}
 									className="w-full py-2 px-5 border-l border-b border-r hover:bg-gray-100 hover:underline"
 								>
-									<div className="whitespace-pre text-base font-bold text-center">
+									<div className="whitespace-pre font-medium text-center">
 										See more
 									</div>
 								</button>

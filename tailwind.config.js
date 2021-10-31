@@ -4,7 +4,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				display: ["Atkinson Hyperlegible"],
+				display: ["Rubik"],
 			},
 		},
 	},

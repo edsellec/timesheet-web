@@ -11,7 +11,6 @@ const Index = () => {
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
 	const [modalData, setModalData] = useState({});
-	console.log(formattedList);
 
 	useEffect(() => {
 		if (dataList) {
@@ -20,9 +19,17 @@ const Index = () => {
 	}, [dataList]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/api/timesheets").then((response) => {
-			setDataList(response.data);
-		});
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
+		axios
+			.get(process.env.REACT_APP_API_URL + "/timesheets", config)
+			.then((response) => {
+				setDataList(response.data);
+			});
 	}, []);
 
 	const tableConstants = (handleRowClick) => {
@@ -150,7 +157,7 @@ const ReadModal = ({ props, handleClose }) => {
 							<div className="whitespace-pre text-lg font-bold">
 								Timesheet for {props.formatted_name}
 							</div>
-							<div className="whitespace-pre font-bold">
+							<div className="whitespace-pre font-medium">
 								<button
 									onClick={() => handleClose()}
 									className="w-full p-3 rounded"

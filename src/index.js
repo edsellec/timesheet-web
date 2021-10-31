@@ -2,11 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import "./config/firebase";
+import { Provider } from "react-redux";
+import index from "./store/index";
 
 ReactDOM.render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>,
+	<Provider store={index}>
+		<React.StrictMode>
+			<App />
+		</React.StrictMode>
+	</Provider>,
 	document.getElementById("root")
 );
 

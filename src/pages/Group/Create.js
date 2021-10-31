@@ -30,8 +30,14 @@ const Create = () => {
 	});
 
 	const onSubmit = (data) => {
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
 		axios
-			.post("http://localhost:3001/api/groups", data)
+			.post(process.env.REACT_APP_API_URL + "/groups", data, config)
 			.then((response) => {
 				history.push("/groups");
 			});
@@ -56,70 +62,96 @@ const Create = () => {
 							onSubmit={onSubmit}
 							validationSchema={validationSchema}
 						>
-							<Form className="w-full block">
-								<div className="w-full block mb-12">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#1 "}</span>
-										Enter the group's code name
-									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											Group code:
-										</div>
-										<Field
-											autoComplete="off"
-											type="text"
-											name="code"
-											placeholder="Ex. TEAM"
-											className="w-1/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="code"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
-									</div>
-								</div>
-								<div className="w-full block mb-12">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#2 "}</span>
-										Enter the group's description
-									</div>
-									<div className="w-full pt-4">
-										<div className="whitespace-pre text-base font-bold uppercase">
-											Description
-										</div>
-										<Field
-											autoComplete="off"
-											type="text"
-											name="description"
-											placeholder="Ex. For teachers in specific subject"
-											className="w-2/3 bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-										/>
-										<ErrorMessage
-											name="description"
-											component="div"
-											className="whitespace-pre pt-1 text-base text-red-600"
-										/>
-									</div>
-								</div>
-								<div className="w-full block">
-									<div className="whitespace-pre text-xl font-bold">
-										<span>{"#3 "}</span>
-										Finalize creating the group
-									</div>
-									<div className="w-full pt-4">
-										<button
-											type="submit"
-											className="py-3 px-5 rounded text-white bg-black hover:underline"
-										>
-											<div className="whitespace-pre text-base font-bold text-center">
-												Create a Group
+							{(formik) => {
+								const { errors, touched, isValid, dirty } =
+									formik;
+								return (
+									<Form className="w-full block">
+										<div className="w-full block mb-12">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#1 "}</span>
+												Enter the group's code name
 											</div>
-										</button>
-									</div>
-								</div>
-							</Form>
+											<div className="w-full pt-4">
+												<div className="whitespace-pre text-base font-bold uppercase">
+													Group code:
+												</div>
+												<Field
+													autoComplete="off"
+													type="text"
+													name="code"
+													placeholder="Ex. TEAM"
+													className={
+														"w-1/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+														(errors.code &&
+														touched.code
+															? " border-red-500"
+															: null)
+													}
+												/>
+												<ErrorMessage
+													name="code"
+													component="div"
+													className="whitespace-pre pt-1 text-base text-red-600"
+												/>
+											</div>
+										</div>
+										<div className="w-full block mb-12">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#2 "}</span>
+												Enter the group's description
+											</div>
+											<div className="w-full pt-4">
+												<div className="whitespace-pre text-base font-bold uppercase">
+													Description
+												</div>
+												<Field
+													autoComplete="off"
+													type="text"
+													name="description"
+													placeholder="Ex. For teachers in specific subject"
+													className={
+														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+														(errors.description &&
+														touched.description
+															? " border-red-500"
+															: null)
+													}
+												/>
+												<ErrorMessage
+													name="description"
+													component="div"
+													className="whitespace-pre pt-1 text-base text-red-600"
+												/>
+											</div>
+										</div>
+										<div className="w-full block">
+											<div className="whitespace-pre text-xl font-bold">
+												<span>{"#3 "}</span>
+												Finalize creating the group
+											</div>
+											<div className="w-full pt-4">
+												<button
+													type="submit"
+													className={
+														"py-3 px-5 rounded" +
+														(!(dirty && isValid)
+															? "  bg-gray-300 text-gray-500 cursor-not-allowed"
+															: " bg-black text-white hover:bg-gray-900")
+													}
+													disabled={
+														!(dirty && isValid)
+													}
+												>
+													<div className="whitespace-pre font-medium text-center">
+														Create a Group
+													</div>
+												</button>
+											</div>
+										</div>
+									</Form>
+								);
+							}}
 						</Formik>
 					</div>
 				</div>

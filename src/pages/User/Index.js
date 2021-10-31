@@ -9,7 +9,6 @@ const Index = () => {
 	let history = useHistory();
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
-	console.log(formattedList);
 
 	useEffect(() => {
 		if (dataList) {
@@ -18,9 +17,17 @@ const Index = () => {
 	}, [dataList]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/api/users").then((response) => {
-			setDataList(response.data);
-		});
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
+		axios
+			.get(process.env.REACT_APP_API_URL + "/users", config)
+			.then((response) => {
+				setDataList(response.data);
+			});
 	}, []);
 
 	const tableConstants = (handleRowClick) => {
@@ -137,7 +144,7 @@ const Index = () => {
 						<div className="whitespace-pre text-3xl font-bold">
 							Users
 						</div>
-						<div className="whitespace-pre font-bold">
+						<div className="whitespace-pre font-medium">
 							<button
 								onClick={() => history.push("/users/create")}
 								className="w-full py-3 px-5 rounded text-white bg-black hover:underline"

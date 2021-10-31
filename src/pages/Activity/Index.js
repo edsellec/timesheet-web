@@ -14,9 +14,17 @@ const Index = () => {
 	const [modalData, setModalData] = useState({});
 
 	function handleFetchData() {
-		axios.get("http://localhost:3001/api/activities").then((response) => {
-			setDataList(response.data);
-		});
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
+		axios
+			.get(process.env.REACT_APP_API_URL + "/activities", config)
+			.then((response) => {
+				setDataList(response.data);
+			});
 	}
 
 	useEffect(() => {
@@ -96,7 +104,7 @@ const Index = () => {
 						<div className="whitespace-pre text-3xl font-bold">
 							Activities
 						</div>
-						<div className="whitespace-pre font-bold">
+						<div className="whitespace-pre font-medium">
 							<button
 								onClick={() =>
 									history.push("/activities/create")
@@ -156,8 +164,18 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 	});
 
 	const onSubmit = (data) => {
+		const config = {
+			headers: {
+				Authorization: "Bearer " + window.localStorage.getItem("token"),
+			},
+		};
+
 		axios
-			.put("http://localhost:3001/api/activities/" + props.id, data)
+			.put(
+				process.env.REACT_APP_API_URL + "/activities/" + props.id,
+				data,
+				config
+			)
 			.then((response) => {
 				handleClose();
 				handleFetchData();
@@ -196,39 +214,59 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 								onSubmit={onSubmit}
 								validationSchema={validationSchema}
 							>
-								<Form className="w-full block">
-									<div className="w-full block mb-6">
-										<div className="w-full">
-											<div className="whitespace-pre text-base font-bold uppercase">
-												Description
-											</div>
-											<Field
-												autoComplete="off"
-												type="text"
-												name="description"
-												placeholder="Ex. A teaching activity"
-												className="w-full bg-gray-200 rounded mt-2 p-3 whitespace-pre text-base"
-											/>
-											<ErrorMessage
-												name="description"
-												component="div"
-												className="whitespace-pre pt-1 text-base text-red-600"
-											/>
-										</div>
-									</div>
-									<div className="w-full block">
-										<div className="w-full pt-4">
-											<button
-												type="submit"
-												className="py-3 px-5 rounded text-white bg-black hover:underline"
-											>
-												<div className="whitespace-pre text-base font-bold text-center">
-													Update activity
+								{(formik) => {
+									const { errors, touched, isValid, dirty } =
+										formik;
+									return (
+										<Form className="w-full block">
+											<div className="w-full block mb-6">
+												<div className="w-full">
+													<div className="whitespace-pre text-base font-bold uppercase">
+														Description
+													</div>
+													<Field
+														autoComplete="off"
+														type="text"
+														name="description"
+														placeholder="Ex. A teaching activity"
+														className={
+															"w-full bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
+															(errors.description &&
+															touched.description
+																? " border-red-500"
+																: null)
+														}
+													/>
+													<ErrorMessage
+														name="description"
+														component="div"
+														className="whitespace-pre pt-1 text-base text-red-600"
+													/>
 												</div>
-											</button>
-										</div>
-									</div>
-								</Form>
+											</div>
+											<div className="w-full block">
+												<div className="w-full pt-4">
+													<button
+														type="submit"
+														className={
+															"py-3 px-5 rounded" +
+															(!(dirty && isValid)
+																? "  bg-gray-300 text-gray-500 cursor-not-allowed"
+																: " bg-black text-white hover:bg-gray-900")
+														}
+														disabled={
+															!(dirty && isValid)
+														}
+													>
+														<div className="whitespace-pre text-base font-bold text-center">
+															Update activity
+														</div>
+													</button>
+												</div>
+											</div>
+										</Form>
+									);
+								}}
 							</Formik>
 						</div>
 					</div>
