@@ -1,7 +1,9 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+	const authUser = useSelector((state) => state.auth.user);
 	const history = useHistory();
 
 	return (
@@ -11,7 +13,7 @@ const Header = () => {
 					<div className="whitespace-pre font-bold text-xl">
 						Timesheet
 					</div>
-					{window.localStorage.getItem("token") ? (
+					{authUser ? (
 						<div className="flex w-full justify-between">
 							<div className="space-x-12">
 								<Link
@@ -26,24 +28,28 @@ const Header = () => {
 								>
 									Timesheet
 								</Link>
-								<Link
-									to="/groups"
-									className="whitespace-pre font-medium hover:underline"
-								>
-									Group
-								</Link>
-								<Link
-									to="/users"
-									className="whitespace-pre font-medium hover:underline"
-								>
-									Users
-								</Link>
-								<Link
-									to="/activities"
-									className="whitespace-pre font-medium hover:underline"
-								>
-									Activities
-								</Link>
+								{authUser && authUser.role?.id === 1 && (
+									<>
+										<Link
+											to="/users"
+											className="whitespace-pre font-medium hover:underline"
+										>
+											Users
+										</Link>
+										<Link
+											to="/groups"
+											className="whitespace-pre font-medium hover:underline"
+										>
+											Groups
+										</Link>
+										<Link
+											to="/activities"
+											className="whitespace-pre font-medium hover:underline"
+										>
+											Activities
+										</Link>
+									</>
+								)}
 							</div>
 							<div className="space-x-12">
 								<button

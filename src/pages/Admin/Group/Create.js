@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
-import { config } from "../../config/request";
+import { config } from "./../../../config/request";
 
 const Create = () => {
 	const history = useHistory();
@@ -14,15 +14,9 @@ const Create = () => {
 
 	const validationSchema = Yup.object().shape({
 		code: Yup.string()
-			.required("No activity code provided.")
-			.min(
-				2,
-				"Acivity code is too short - should be 2 characters minimum."
-			)
-			.max(
-				5,
-				"Acivity code is too long - should be 5 characters maximum."
-			)
+			.required("No group code provided.")
+			.min(2, "Group code is too short - should be 2 characters minimum.")
+			.max(6, "Group code is too long - should be 6 characters maximum.")
 			.matches(/[a-zA-Z]/, "Group code can only contain Latin letters."),
 		description: Yup.string()
 			.required("No description provided.")
@@ -38,9 +32,9 @@ const Create = () => {
 
 	const onSubmit = (data) => {
 		axios
-			.post(process.env.REACT_APP_API_URL + "/activities", data, config)
+			.post(process.env.REACT_APP_API_URL + "/groups", data, config)
 			.then((response) => {
-				history.push("/activities");
+				history.push("/groups");
 			});
 	};
 
@@ -51,7 +45,7 @@ const Create = () => {
 					<div className="block  items-center">
 						<div className="flex w-full justify-between py-4">
 							<div className="whitespace-pre text-3xl font-bold">
-								Create an activity
+								Create a group
 							</div>
 						</div>
 					</div>
@@ -71,17 +65,17 @@ const Create = () => {
 										<div className="w-full block mb-12">
 											<div className="whitespace-pre text-xl font-bold">
 												<span>{"#1 "}</span>
-												Enter the activity code name
+												Enter the group's code name
 											</div>
 											<div className="w-full pt-4">
 												<div className="whitespace-pre text-base font-bold uppercase">
-													Activity code:
+													Group code:
 												</div>
 												<Field
 													autoComplete="off"
 													type="text"
 													name="code"
-													placeholder="Ex. TEACH"
+													placeholder="Ex. TEAM"
 													className={
 														"w-1/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 														(errors.code &&
@@ -100,7 +94,7 @@ const Create = () => {
 										<div className="w-full block mb-12">
 											<div className="whitespace-pre text-xl font-bold">
 												<span>{"#2 "}</span>
-												Enter the activiy description
+												Enter the group's description
 											</div>
 											<div className="w-full pt-4">
 												<div className="whitespace-pre text-base font-bold uppercase">
@@ -110,7 +104,7 @@ const Create = () => {
 													autoComplete="off"
 													type="text"
 													name="description"
-													placeholder="Ex. A teaching activity"
+													placeholder="Ex. For teachers in specific subject"
 													className={
 														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 														(errors.description &&
@@ -129,7 +123,7 @@ const Create = () => {
 										<div className="w-full block">
 											<div className="whitespace-pre text-xl font-bold">
 												<span>{"#3 "}</span>
-												Finalize creating the activity
+												Finalize creating the group
 											</div>
 											<div className="w-full pt-4">
 												<button
@@ -144,8 +138,8 @@ const Create = () => {
 														!(dirty && isValid)
 													}
 												>
-													<div className="whitespace-pre text-base font-medium text-center">
-														Create an activity
+													<div className="whitespace-pre font-medium text-center">
+														Create a Group
 													</div>
 												</button>
 											</div>

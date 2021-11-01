@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
-import { config } from "../../config/request";
+import { config } from "./../../../config/request";
 
 const Create = () => {
 	const history = useHistory();
@@ -11,7 +11,6 @@ const Create = () => {
 		firstName: "",
 		lastName: "",
 		email: "",
-		password: "",
 	};
 
 	const validationSchema = Yup.object().shape({
@@ -35,13 +34,6 @@ const Create = () => {
 				"Email address is too long - should be 255 characters maximum."
 			)
 			.email("Invalid email format"),
-		password: Yup.string()
-			.required("No password provided.")
-			.min(8, "Password is too short - should be 8 characters minimum."),
-		// .matches(
-		// 	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-		// 	"Password must contain eight (8) characters, one (1) uppercase, one (1) lowercase, one (1) number and one (1) special case character."
-		// ),
 	});
 
 	const onSubmit = (data) => {
@@ -162,35 +154,6 @@ const Create = () => {
 										<div className="w-full block">
 											<div className="whitespace-pre text-xl font-bold">
 												<span>{"#3 "}</span>
-												Enter a secure password:
-											</div>
-											<div className="w-full pt-4">
-												<div className="whitespace-pre text-base font-bold uppercase">
-													Password
-												</div>
-												<Field
-													autoComplete="off"
-													type="password"
-													name="password"
-													placeholder=""
-													className={
-														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
-														(errors.password &&
-														touched.password
-															? " border-red-500"
-															: null)
-													}
-												/>
-												<ErrorMessage
-													name="password"
-													component="div"
-													className="whitespace-pre pt-1 text-base text-red-600"
-												/>
-											</div>
-										</div>
-										<div className="w-full block">
-											<div className="whitespace-pre text-xl font-bold">
-												<span>{"#4 "}</span>
 												Finalize creating the account
 											</div>
 											<div className="w-full pt-4">

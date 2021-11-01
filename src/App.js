@@ -1,41 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles/tailwind.css";
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/Header";
-import RoutesIndex from "./routes/index";
+import DefaultRoutes from "./routes/defaultRoutes";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser } from "./states/authSlice";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
-	const auth = getAuth();
-	const user = useSelector((state) => state.auth.user);
+	const authState = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(fetchUser());
 	}, [dispatch]);
 
-	console.log(user);
-
-	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				auth.currentUser.getIdToken().then((token) => {
-					window.localStorage.setItem("token", token);
-				});
-			} else {
-				window.localStorage.removeItem("token");
-			}
-		});
-	}, []);
+	console.log(authState);
 
 	return (
-		<div className="font-display">
-			<BrowserRouter>
-				<Header />
-				<RoutesIndex />
-			</BrowserRouter>
+		<div className="w-screen h-screen font-display overflow-y-auto">
+			{authState.isLoading ? (
+				<div className=""> Loading .... </div>
+			) : (
+				<BrowserRouter>
+					<Header />
+					<DefaultRoutes />
+				</BrowserRouter>
+			)}
 		</div>
 	);
 }

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { timesheetFormatList } from "./../../utils";
-import { Table } from "./../../components/index";
-import { config } from "../../config/request";
+import { timesheetFormatList } from "./../../../utils";
+import { Title, Table } from "./../../../components/index";
+import { useSelector } from "react-redux";
+import { config } from "./../../../config/request";
 
 const Index = () => {
+	const authUser = useSelector((state) => state.auth.user);
 	let history = useHistory();
 	const dateToday = moment().format("dddd, MMMM D");
 	const [dataList, setDataList] = useState();
@@ -20,14 +22,21 @@ const Index = () => {
 	}, [dataList]);
 
 	useEffect(() => {
-		axios
-			.get(process.env.REACT_APP_API_URL + "/timesheets", config)
-			.then((response) => {
-				setDataList(response.data);
-			});
-	}, []);
+		if (authUser) {
+			axios
+				.get(
+					process.env.REACT_APP_API_URL +
+						"/timesheets/" +
+						authUser.id,
+					config
+				)
+				.then((response) => {
+					setDataList(response.data);
+				});
+		}
+	}, [authUser]);
 
-	const tableConstants = (handleRowClick) => {
+	const tableConstants = () => {
 		return [
 			{
 				title: () => {
@@ -39,18 +48,18 @@ const Index = () => {
 			},
 			{
 				title: () => {
-					return <span>Name</span>;
+					return <span>Description</span>;
 				},
 				render: (row) => {
-					return <span>{row.formatted_name}</span>;
+					return <span>{row.description}</span>;
 				},
 			},
 			{
 				title: () => {
-					return <span>Group</span>;
+					return <span>Activity code</span>;
 				},
 				render: (row) => {
-					return <span>{row.group.code}</span>;
+					return <span>{row.activity.code}</span>;
 				},
 			},
 			{
@@ -59,21 +68,6 @@ const Index = () => {
 				},
 				render: (row) => {
 					return <span>{row.hours_worked}</span>;
-				},
-			},
-			{
-				title: () => {
-					return <span> </span>;
-				},
-				render: (row) => {
-					return (
-						<button
-							className="flex items-center hover:underline"
-							onClick={() => handleRowClick(row)}
-						>
-							Expand
-						</button>
-					);
 				},
 			},
 		];
@@ -87,28 +81,64 @@ const Index = () => {
 		setModalData({});
 	}
 
-	return (
-		<section className="w-screen">
-			<div className="w-full bg-white py-4 border-b">
-				<div className="block sm:w-2/3 mx-auto items-center">
-					<div className="flex w-full justify-between py-4">
+	const titleConstants = () => {
+		return [
+			{
+				title: () => {
+					return (
 						<div className="whitespace-pre text-3xl font-bold">
 							Timesheet
 						</div>
-					</div>
-				</div>
-			</div>
+					);
+				},
+			},
+		];
+	};
+
+	return (
+		<section className="w-screen">
+			<Title cols={titleConstants()} />
 			<div className="w-full bg-white py-4">
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
 							Submitted on {dateToday}
 						</div>
+						<div className="flex w-full py-4">
+							<div className="w-full flex border rounded p-5 items-center justify-between">
+								<div className="flex space-x-6">
+									<div className="whitespace-pre font-light text-base uppercase">
+										<span>Time started:</span>
+										<span className="font-medium pl-1">
+											--:-- --
+										</span>
+									</div>
+									<div className="whitespace-pre font-light text-base uppercase">
+										<span>Time ended:</span>
+										<span className="font-medium pl-1">
+											--:-- --
+										</span>
+									</div>
+								</div>
+								<button className="py-3 px-5 rounded text-white bg-black hover:underline">
+									<div className="whitespace-pre text-base font-bold text-center">
+										Add timesheet entry
+									</div>
+								</button>
+							</div>
+						</div>
 						<div className="w-full py-5">
 							<Table
 								cols={tableConstants(handleTableRowAction)}
 								rows={formattedList}
 							/>
+							{formattedList.length <= 0 && (
+								<div className="w-full py-2 px-5 border-l border-b border-r">
+									<div className="whitespace-pre text-center">
+										You haven't added anything yet
+									</div>
+								</div>
+							)}
 						</div>
 						{Object.keys(modalData).length !== 0 && (
 							<ReadModal

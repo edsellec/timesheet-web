@@ -4,9 +4,9 @@ import axios from "axios";
 import moment from "moment";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { groupFormatList } from "./../../utils";
-import { Table } from "./../../components/index";
-import { config } from "../../config/request";
+import { groupFormatList } from "./../../../utils";
+import { Title, Table } from "./../../../components/index";
+import { config } from "./../../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -120,14 +120,20 @@ const Index = () => {
 		setModalReadData({});
 	}
 
-	return (
-		<section className="w-screen">
-			<div className="w-full bg-white py-4 border-b">
-				<div className="block sm:w-2/3 mx-auto items-center">
-					<div className="flex w-full justify-between py-4">
+	const titleConstants = () => {
+		return [
+			{
+				title: () => {
+					return (
 						<div className="whitespace-pre text-3xl font-bold">
 							Groups
 						</div>
+					);
+				},
+			},
+			{
+				title: () => {
+					return (
 						<div className="whitespace-pre font-medium">
 							<button
 								onClick={() => history.push("/groups/create")}
@@ -138,9 +144,15 @@ const Index = () => {
 								</div>
 							</button>
 						</div>
-					</div>
-				</div>
-			</div>
+					);
+				},
+			},
+		];
+	};
+
+	return (
+		<section className="w-screen">
+			<Title cols={titleConstants()} />
 			<div className="w-full bg-white py-4">
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="block w-full py-4">

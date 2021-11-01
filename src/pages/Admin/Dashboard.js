@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { userFormatList } from "./../utils";
-import { Table } from "./../components/";
+import { userFormatList } from "./../../utils";
+import { Title, Summary, Table } from "./../../components/";
 import { useSelector } from "react-redux";
-import { config } from "../config/request";
+import { config } from "./../../config/request";
 
 const Index = () => {
-	const user = useSelector((state) => state.auth.user);
+	const authUser = useSelector((state) => state.auth.user);
 	const dateToday = moment().format("dddd, MMMM D");
 	const history = useHistory();
 	const [dataList, setDataList] = useState();
 	const [formattedList, setFormattedList] = useState([]);
 	const [attendance, setAttendance] = useState({
+		id: null,
 		started_at: null,
 		ended_at: null,
 	});
@@ -74,27 +75,53 @@ const Index = () => {
 	}, []);
 
 	useEffect(() => {
-		if (user) {
+		if (authUser) {
 			axios
 				.get(
-					process.env.REACT_APP_API_URL + "/attendance/" + user.id,
+					process.env.REACT_APP_API_URL +
+						"/attendance/" +
+						authUser.id,
 					config
 				)
 				.then((response) => {
 					if (response) {
 						setAttendance({
+							id: response.data.id,
 							started_at: response.data.started_at,
 							ended_at: response.data.ended_at,
 						});
 					} else {
 						setAttendance({
+							id: null,
 							started_at: null,
 							ended_at: null,
 						});
 					}
 				});
 		}
-	}, [user]);
+	}, [authUser]);
+
+	function handleTimeIn() {
+		let data = { user_id: authUser.id };
+		axios
+			.post(process.env.REACT_APP_API_URL + "/attendance", data, config)
+			.then((response) => {
+				history.go(0);
+			});
+	}
+
+	function handleTimeOut() {
+		let data = { id: attendance.id };
+		axios
+			.put(
+				process.env.REACT_APP_API_URL + "/attendance/" + authUser.id,
+				data,
+				config
+			)
+			.then((response) => {
+				history.go(0);
+			});
+	}
 
 	const tableConstants = () => {
 		return [
@@ -160,20 +187,61 @@ const Index = () => {
 		];
 	};
 
-	return (
-		<section className="w-screen">
-			<div className="w-full bg-white py-4 border-b">
-				<div className="block sm:w-2/3 mx-auto items-center">
-					<div className="flex w-full justify-between py-4">
+	const titleConstants = () => {
+		return [
+			{
+				title: () => {
+					return (
 						<div className="whitespace-pre text-3xl font-bold">
 							Dashboard
 						</div>
+					);
+				},
+			},
+			{
+				title: () => {
+					return (
 						<div className="whitespace-pre font-medium">
 							{dateToday}
 						</div>
-					</div>
-				</div>
-			</div>
+					);
+				},
+			},
+		];
+	};
+
+	const summaryConstants = () => {
+		return [
+			{
+				title: () => {
+					return <span>Logged on time</span>;
+				},
+				value: () => {
+					return <span>{summary.ontime}</span>;
+				},
+			},
+			{
+				title: () => {
+					return <span>Tardy</span>;
+				},
+				value: () => {
+					return <span>{summary.tardy}</span>;
+				},
+			},
+			{
+				title: () => {
+					return <span>Absent</span>;
+				},
+				value: () => {
+					return <span>{summary.absent}</span>;
+				},
+			},
+		];
+	};
+
+	return (
+		<section className="w-screen">
+			<Title cols={titleConstants()} />
 			<div className="w-full bg-white py-4">
 				<div className="block sm:w-2/3 mx-auto items-center">
 					<div className="flex w-full py-4">
@@ -200,41 +268,38 @@ const Index = () => {
 									</span>
 								</div>
 							</div>
-							<button className="py-3 px-5 rounded text-white bg-black hover:underline">
+							<button
+								onClick={() => {
+									if (
+										attendance.started_at &&
+										!attendance.ended_at
+									) {
+										handleTimeOut();
+									} else {
+										handleTimeIn();
+									}
+								}}
+								disabled={
+									attendance.started_at && attendance.ended_at
+								}
+								className={
+									"py-3 px-5 rounded" +
+									(attendance.started_at &&
+									attendance.ended_at
+										? " bg-gray-300 text-gray-500 cursor-not-allowed"
+										: " text-white bg-black hover:underline")
+								}
+							>
 								<div className="whitespace-pre text-base font-bold text-center">
-									{!attendance.ended_at
+									{attendance.started_at &&
+									!attendance.ended_at
 										? "Time out"
 										: "Time in"}
 								</div>
 							</button>
 						</div>
 					</div>
-					<div className="flex w-full justify-between space-x-6 py-4">
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre font-light text-base uppercase">
-								Logged on time
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{summary.ontime}
-							</div>
-						</div>
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre font-light text-base uppercase">
-								Tardy
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{summary.tardy}
-							</div>
-						</div>
-						<div className="w-full block border rounded p-5">
-							<div className="whitespace-pre font-light text-base uppercase">
-								Absent
-							</div>
-							<div className="whitespace-pre text-3xl font-bold">
-								{summary.absent}
-							</div>
-						</div>
-					</div>
+					<Summary cols={summaryConstants()} />
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
 							Active users today
