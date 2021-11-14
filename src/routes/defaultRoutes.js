@@ -4,6 +4,7 @@ import PrivateRoute from "./private";
 import PublicRoute from "./public";
 import { useSelector } from "react-redux";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import axios from "axios";
 
 import AuthLogin from "../pages/Auth/Login";
 import AdminDashboard from "../pages/Admin/Dashboard";
@@ -17,25 +18,41 @@ import AdminActivityCreate from "../pages/Admin/Activity/Create";
 
 import UserDashboard from "../pages/User/Dashboard";
 import UserTimesheetIndex from "../pages/User/Timesheet/Index";
+import UserTimesheetCreate from "../pages/User/Timesheet/Create";
 
 function DefaultRoutes() {
 	const auth = getAuth();
 	const authState = useSelector((state) => state.auth);
-	const location = useLocation();
 
-	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				if (authState.user) {
-					auth.currentUser.getIdToken().then((token) => {
-						window.localStorage.setItem("token", token);
-					});
-				} else {
-					window.localStorage.removeItem("token");
+	axios.interceptors.request.use(
+		function (config) {
+			onAuthStateChanged(auth, (user) => {
+				if (user) {
+					if (authState.user) {
+						auth.currentUser.getIdToken().then((token) => {
+							window.localStorage.setItem("token", token);
+						});
+					} else {
+						window.localStorage.removeItem("token");
+					}
 				}
-			}
-		});
-	}, [location]);
+			});
+
+			return config;
+		},
+		function (error) {
+			return Promise.reject(error);
+		}
+	);
+
+	axios.interceptors.response.use(
+		function (response) {
+			return response;
+		},
+		function (error) {
+			return Promise.reject(error);
+		}
+	);
 
 	return (
 		<Switch>
@@ -106,8 +123,15 @@ function DefaultRoutes() {
 							component={UserTimesheetIndex}
 							role={"User"}
 						/>
+						<PrivateRoute
+							path="/timesheets/create"
+							exact
+							component={UserTimesheetCreate}
+							role={"User"}
+						/>
 					</>
 				))}
+			<Redirect to="/login" />
 		</Switch>
 	);
 }

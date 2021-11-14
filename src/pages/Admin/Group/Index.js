@@ -6,7 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { groupFormatList } from "./../../../utils";
 import { Title, Table } from "./../../../components/index";
-import { config } from "./../../../config/request";
+import { headers } from "./../../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -17,7 +17,10 @@ const Index = () => {
 
 	function handleFetchData() {
 		axios
-			.get(process.env.REACT_APP_API_URL + "/groups", config)
+			.get(process.env.REACT_APP_API_URL + "/groups", {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				setDataList(response.data);
 			});
@@ -137,7 +140,7 @@ const Index = () => {
 						<div className="whitespace-pre font-medium">
 							<button
 								onClick={() => history.push("/groups/create")}
-								className="w-full py-3 px-5 rounded text-white bg-black hover:underline"
+								className="w-full py-3 px-5 rounded text-white bg-blue-800 hover:bg-blue-900 hover:underline"
 							>
 								<div className="whitespace-pre text-base font-bold text-center">
 									Create a group
@@ -268,11 +271,10 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 
 	const onSubmit = (data) => {
 		axios
-			.put(
-				process.env.REACT_APP_API_URL + "/groups/" + props.id,
-				data,
-				config
-			)
+			.put(process.env.REACT_APP_API_URL + "/groups/" + props.id, data, {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				handleClose();
 				handleFetchData();
@@ -348,8 +350,8 @@ const UpdateModal = ({ props, handleFetchData, handleClose }) => {
 														className={
 															"py-3 px-5 rounded" +
 															(!(dirty && isValid)
-																? "  bg-gray-300 text-gray-500 cursor-not-allowed"
-																: " bg-black text-white hover:bg-gray-900")
+																? " bg-gray-300 text-gray-500 cursor-not-allowed"
+																: " bg-blue-800 text-white hover:bg-blue-900")
 														}
 														disabled={
 															!(dirty && isValid)

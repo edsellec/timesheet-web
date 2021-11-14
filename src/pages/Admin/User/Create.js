@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
-import { config } from "./../../../config/request";
+import { headers } from "./../../../config/request";
 
 const Create = () => {
 	const history = useHistory();
@@ -38,7 +38,10 @@ const Create = () => {
 
 	const onSubmit = (data) => {
 		axios
-			.post(process.env.REACT_APP_API_URL + "/users", data, config)
+			.post(process.env.REACT_APP_API_URL + "/users", data, {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				history.push("/users");
 			});
@@ -163,7 +166,7 @@ const Create = () => {
 														"py-3 px-5 rounded" +
 														(!(dirty && isValid)
 															? "  bg-gray-300 text-gray-500 cursor-not-allowed"
-															: " bg-black text-white hover:bg-gray-900")
+															: " bg-blue-600 text-white hover:bg-blue-900")
 													}
 													disabled={
 														!(dirty && isValid)

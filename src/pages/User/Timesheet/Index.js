@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { timesheetFormatList } from "./../../../utils";
 import { Title, Table } from "./../../../components/index";
 import { useSelector } from "react-redux";
-import { config } from "./../../../config/request";
+import { headers } from "./../../../config/request";
 
 const Index = () => {
 	const authUser = useSelector((state) => state.auth.user);
@@ -17,7 +16,7 @@ const Index = () => {
 
 	useEffect(() => {
 		if (dataList) {
-			setFormattedList(timesheetFormatList(dataList));
+			setFormattedList(dataList);
 		}
 	}, [dataList]);
 
@@ -28,7 +27,13 @@ const Index = () => {
 					process.env.REACT_APP_API_URL +
 						"/timesheets/" +
 						authUser.id,
-					config
+					{
+						params: {
+							before: new Date(),
+							after: new Date(),
+						},
+						headers: headers,
+					}
 				)
 				.then((response) => {
 					setDataList(response.data);
@@ -92,6 +97,24 @@ const Index = () => {
 					);
 				},
 			},
+			{
+				title: () => {
+					return (
+						<div className="whitespace-pre font-medium">
+							<button
+								onClick={() =>
+									history.push("/timesheets/create")
+								}
+								className="w-full py-3 px-5 rounded text-white bg-blue-800 hover:bg-blue-900 hover:underline"
+							>
+								<div className="whitespace-pre text-base font-bold text-center">
+									Create an entry
+								</div>
+							</button>
+						</div>
+					);
+				},
+			},
 		];
 	};
 
@@ -103,29 +126,6 @@ const Index = () => {
 					<div className="block w-full py-4">
 						<div className="whitespace-pre text-lg font-bold">
 							Submitted on {dateToday}
-						</div>
-						<div className="flex w-full py-4">
-							<div className="w-full flex border rounded p-5 items-center justify-between">
-								<div className="flex space-x-6">
-									<div className="whitespace-pre font-light text-base uppercase">
-										<span>Time started:</span>
-										<span className="font-medium pl-1">
-											--:-- --
-										</span>
-									</div>
-									<div className="whitespace-pre font-light text-base uppercase">
-										<span>Time ended:</span>
-										<span className="font-medium pl-1">
-											--:-- --
-										</span>
-									</div>
-								</div>
-								<button className="py-3 px-5 rounded text-white bg-black hover:underline">
-									<div className="whitespace-pre text-base font-bold text-center">
-										Add timesheet entry
-									</div>
-								</button>
-							</div>
 						</div>
 						<div className="w-full py-5">
 							<Table

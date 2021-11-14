@@ -4,7 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import { timesheetFormatList } from "./../../../utils";
 import { Title, Table } from "./../../../components/index";
-import { config } from "./../../../config/request";
+import { headers } from "./../../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -21,7 +21,10 @@ const Index = () => {
 
 	useEffect(() => {
 		axios
-			.get(process.env.REACT_APP_API_URL + "/timesheets", config)
+			.get(process.env.REACT_APP_API_URL + "/timesheets", {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				setDataList(response.data);
 			});

@@ -52,7 +52,7 @@ const Create = () => {
 						<div className="w-full space-y-2">
 							<button
 								onClick={handleLoginWithGoogle}
-								className="py-3 px-5 rounded text-white bg-black hover:underline"
+								className="py-3 px-5 rounded text-white bg-blue-800 hover:bg-blue-900 hover:underline"
 							>
 								<div className="whitespace-pre font-medium text-center">
 									Log in with Google

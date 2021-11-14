@@ -4,7 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import { userFormatList } from "./../../../utils";
 import { Title, Table } from "./../../../components/index";
-import { config } from "./../../../config/request";
+import { headers } from "./../../../config/request";
 
 const Index = () => {
 	let history = useHistory();
@@ -19,7 +19,10 @@ const Index = () => {
 
 	useEffect(() => {
 		axios
-			.get(process.env.REACT_APP_API_URL + "/users", config)
+			.get(process.env.REACT_APP_API_URL + "/users", {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				setDataList(response.data);
 			});
@@ -164,7 +167,7 @@ const Index = () => {
 						<div className="whitespace-pre font-medium">
 							<button
 								onClick={() => history.push("/users/create")}
-								className="w-full py-3 px-5 rounded text-white bg-black hover:underline"
+								className="w-full py-3 px-5 rounded text-white bg-blue-800 hover:bg-blue-900 hover:underline"
 							>
 								<div className="whitespace-pre text-base font-bold text-center">
 									Add a user

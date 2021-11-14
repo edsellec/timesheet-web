@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { Title } from "./../../components/";
+import { Title, Summary } from "./../../components/";
 import { useSelector } from "react-redux";
-import { config } from "./../../config/request";
+import { headers } from "./../../config/request";
 
 const Index = () => {
 	const authUser = useSelector((state) => state.auth.user);
@@ -23,7 +23,10 @@ const Index = () => {
 					process.env.REACT_APP_API_URL +
 						"/attendance/" +
 						authUser.id,
-					config
+					{
+						params: {},
+						headers: headers,
+					}
 				)
 				.then((response) => {
 					if (response) {
@@ -46,7 +49,10 @@ const Index = () => {
 	function handleTimeIn() {
 		let data = { user_id: authUser.id };
 		axios
-			.post(process.env.REACT_APP_API_URL + "/attendance", data, config)
+			.post(process.env.REACT_APP_API_URL + "/attendance", data, {
+				params: {},
+				headers: headers,
+			})
 			.then((response) => {
 				history.go(0);
 			});
@@ -58,7 +64,10 @@ const Index = () => {
 			.put(
 				process.env.REACT_APP_API_URL + "/attendance/" + authUser.id,
 				data,
-				config
+				{
+					params: {},
+					headers: headers,
+				}
 			)
 			.then((response) => {
 				history.go(0);
@@ -81,6 +90,112 @@ const Index = () => {
 					return (
 						<div className="whitespace-pre font-medium">
 							{dateToday}
+						</div>
+					);
+				},
+			},
+		];
+	};
+
+	const summaryConstants = () => {
+		const durationDay = "07:10";
+		const hoursDay =
+			parseInt(durationDay.split(":")[0]) +
+			parseInt(durationDay.split(":")[1]) / 60;
+
+		const durationWeek = "39:10";
+		const hoursWeek =
+			parseInt(durationWeek.split(":")[0]) +
+			parseInt(durationWeek.split(":")[1]) / 60;
+
+		const timeLeftDay = parseFloat(8 - hoursDay).toFixed(2);
+		const percentDay = parseFloat((hoursDay / 8) * 100).toFixed(0);
+		const timeLeftWeek = parseFloat(40 - hoursWeek).toFixed(2);
+		const percentWeek = parseFloat((hoursWeek / 40) * 100).toFixed(0);
+
+		return [
+			{
+				title: () => {
+					return <span>My hours this day</span>;
+				},
+				value: () => {
+					return (
+						<div className="relative">
+							<div className="flex mb-2 items-center justify-between">
+								<div>
+									<span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-800 bg-gray-200">
+										{timeLeftDay > 0
+											? timeLeftDay > 1
+												? timeLeftDay + " hours left"
+												: timeLeftDay === 1
+												? timeLeftDay + " hour left"
+												: 60 -
+												  parseInt(
+														durationDay.split(
+															":"
+														)[1]
+												  ) +
+												  " minutes left"
+											: "Completed"}
+									</span>
+								</div>
+								<div className="text-right">
+									<span className="text-xs font-semibold inline-block text-blue-800">
+										{percentDay + "%"}
+									</span>
+								</div>
+							</div>
+							<div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+								<div
+									style={{
+										width: percentDay.toString() + "%",
+									}}
+									className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-800"
+								></div>
+							</div>
+						</div>
+					);
+				},
+			},
+			{
+				title: () => {
+					return <span>My hours this week</span>;
+				},
+				value: () => {
+					return (
+						<div className="relative">
+							<div className="flex mb-2 items-center justify-between">
+								<div>
+									<span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-800 bg-gray-200">
+										{timeLeftWeek > 0
+											? timeLeftWeek > 1
+												? timeLeftWeek + " hours left"
+												: timeLeftWeek === 1
+												? timeLeftWeek + " hour left"
+												: 60 -
+												  parseInt(
+														durationWeek.split(
+															":"
+														)[1]
+												  ) +
+												  " minutes left"
+											: "Completed"}
+									</span>
+								</div>
+								<div className="text-right">
+									<span className="text-xs font-semibold inline-block text-blue-800">
+										{percentWeek + "%"}
+									</span>
+								</div>
+							</div>
+							<div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+								<div
+									style={{
+										width: percentWeek.toString() + "%",
+									}}
+									className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-800"
+								></div>
+							</div>
 						</div>
 					);
 				},
@@ -136,7 +251,7 @@ const Index = () => {
 									(attendance.started_at &&
 									attendance.ended_at
 										? " bg-gray-300 text-gray-500 cursor-not-allowed"
-										: " text-white bg-black hover:underline")
+										: " text-white bg-blue-800 hover:bg-blue-900 hover:underline")
 								}
 							>
 								<div className="whitespace-pre text-base font-bold text-center">
@@ -148,6 +263,7 @@ const Index = () => {
 							</button>
 						</div>
 					</div>
+					<Summary cols={summaryConstants()} />
 				</div>
 			</div>
 		</section>
