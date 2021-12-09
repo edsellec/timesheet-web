@@ -1,6 +1,6 @@
 # Timesheet (Frontend)
 
-A web-based application for filing employee timesheets. Targeted for educators', it's User-friendly, and fast web application for weekly / monthly reporting.
+A web-based application for filing employee timesheets. Targeted for educators', it's a user-friendly and fast web application specified for weekly and monthly reporting.
 
 # Description
 Users can be assigned one or more of the following roles: 
