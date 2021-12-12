@@ -5,6 +5,7 @@ import moment from "moment";
 import { Title, Summary } from "./../../components/";
 import { useSelector } from "react-redux";
 import { headers } from "./../../config/request";
+import { summaryTimesheetFormat } from "./../../utils";
 
 const Index = () => {
 	const authUser = useSelector((state) => state.auth.user);
@@ -15,6 +16,7 @@ const Index = () => {
 		started_at: null,
 		ended_at: null,
 	});
+	const [summaryTimesheet, setSummaryTimesheet] = useState();
 
 	useEffect(() => {
 		if (authUser) {
@@ -42,6 +44,25 @@ const Index = () => {
 							ended_at: null,
 						});
 					}
+				});
+
+			axios
+				.get(
+					process.env.REACT_APP_API_URL +
+						"/timesheets/" +
+						authUser.id,
+					{
+						params: {
+							before: moment(
+								new Date(2018, 11, 24, 10, 33, 30, 0)
+							).format("YYYY-MM-DD"),
+							after: moment(new Date()).format("YYYY-MM-DD"),
+						},
+						headers: headers,
+					}
+				)
+				.then((response) => {
+					setSummaryTimesheet(summaryTimesheetFormat(response.data));
 				});
 		}
 	}, [authUser]);
@@ -98,20 +119,19 @@ const Index = () => {
 	};
 
 	const summaryConstants = () => {
-		const durationDay = "07:10";
-		const hoursDay =
-			parseInt(durationDay.split(":")[0]) +
-			parseInt(durationDay.split(":")[1]) / 60;
+		const timeLeftDay = parseFloat(
+			8 - summaryTimesheet.durationDay
+		).toFixed(2);
+		const percentDay = parseFloat(
+			(summaryTimesheet.durationDay / 8) * 100
+		).toFixed(0);
 
-		const durationWeek = "39:10";
-		const hoursWeek =
-			parseInt(durationWeek.split(":")[0]) +
-			parseInt(durationWeek.split(":")[1]) / 60;
-
-		const timeLeftDay = parseFloat(8 - hoursDay).toFixed(2);
-		const percentDay = parseFloat((hoursDay / 8) * 100).toFixed(0);
-		const timeLeftWeek = parseFloat(40 - hoursWeek).toFixed(2);
-		const percentWeek = parseFloat((hoursWeek / 40) * 100).toFixed(0);
+		const timeLeftWeek = parseFloat(
+			40 - summaryTimesheet.durationWeek
+		).toFixed(2);
+		const percentWeek = parseFloat(
+			(summaryTimesheet.durationWeek / 40) * 100
+		).toFixed(0);
 
 		return [
 			{
@@ -130,11 +150,7 @@ const Index = () => {
 												: timeLeftDay === 1
 												? timeLeftDay + " hour left"
 												: 60 -
-												  parseInt(
-														durationDay.split(
-															":"
-														)[1]
-												  ) +
+												  summaryTimesheet.minutesDay +
 												  " minutes left"
 											: "Completed"}
 									</span>
@@ -173,11 +189,7 @@ const Index = () => {
 												: timeLeftWeek === 1
 												? timeLeftWeek + " hour left"
 												: 60 -
-												  parseInt(
-														durationWeek.split(
-															":"
-														)[1]
-												  ) +
+												  summaryTimesheet.minutesWeek +
 												  " minutes left"
 											: "Completed"}
 									</span>
@@ -263,7 +275,7 @@ const Index = () => {
 							</button>
 						</div>
 					</div>
-					<Summary cols={summaryConstants()} />
+					{summaryTimesheet && <Summary cols={summaryConstants()} />}
 				</div>
 			</div>
 		</section>

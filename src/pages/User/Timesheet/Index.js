@@ -29,8 +29,8 @@ const Index = () => {
 						authUser.id,
 					{
 						params: {
-							before: new Date(),
-							after: new Date(),
+							before: moment(new Date()).format("YYYY-MM-DD"),
+							after: moment(new Date()).format("YYYY-MM-DD"),
 						},
 						headers: headers,
 					}

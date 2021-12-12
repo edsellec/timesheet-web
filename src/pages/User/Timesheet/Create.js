@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
@@ -14,6 +14,8 @@ const Create = () => {
 		hours: 0,
 		minutes: 1,
 	};
+	const ref = useRef(null);
+	const [formValues, setFormValues] = useState(initialValues);
 	const [formattedList, setFormattedList] = useState([]);
 	const [dataList, setDataList] = useState();
 
@@ -52,12 +54,14 @@ const Create = () => {
 			),
 		hours: Yup.number()
 			.required("No hours entered.")
-			.min(0, "Hours worked can't start with a minus")
-			.integer("Hours worked can't include a decimal point"),
+			.min(0, "Hours can't start with a minus")
+			.max(8, "Hours can't be more than 8 hours")
+			.integer("Hours can't include a decimal point"),
 		minutes: Yup.number()
 			.required("No minutes entered.")
-			.positive("Hours worked can't start with a minus")
-			.integer("Minutes worked can't include a decimal point"),
+			.min(0, "Minutes can't start with a minus")
+			.max(60, "Hours can't be more than 60 minutes")
+			.integer("Minutes can't include a decimal point"),
 	});
 
 	const onSubmit = (data) => {
@@ -70,7 +74,7 @@ const Create = () => {
 				history.push("/timesheets");
 			});
 	};
-
+	console.log(formValues);
 	return (
 		<section className="w-screen">
 			<div className="sm:w-2/3 mx-auto">
@@ -87,12 +91,28 @@ const Create = () => {
 					<div className="block items-center">
 						<Formik
 							initialValues={initialValues}
+							innerRef={ref}
 							onSubmit={onSubmit}
 							validationSchema={validationSchema}
 						>
 							{(formik) => {
-								const { errors, touched, isValid, dirty } =
-									formik;
+								const {
+									errors,
+									touched,
+									isValid,
+									dirty,
+									handleChange,
+								} = formik;
+								const onChange = (e) => {
+									const targetEl = e.target;
+									const fieldName = targetEl.name;
+									setFormValues({
+										...formValues,
+										[fieldName]: targetEl.value,
+									});
+									return handleChange(e);
+								};
+
 								return (
 									<Form className="w-full block">
 										<div className="w-full block mb-12">
@@ -109,6 +129,7 @@ const Create = () => {
 													component="select"
 													name="activity_id"
 													placeholder="Ex. PROEJCT"
+													onChange={onChange}
 													className={
 														"w-1/4 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 														(errors.activity_id &&
@@ -153,6 +174,7 @@ const Create = () => {
 													type="text"
 													name="description"
 													placeholder="Ex. Prepared lesson plan for the said activity"
+													onChange={onChange}
 													className={
 														"w-2/3 bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 														(errors.description &&
@@ -183,6 +205,7 @@ const Create = () => {
 														type="number"
 														name="hours"
 														placeholder="00"
+														onChange={onChange}
 														className={
 															"w-full bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 															(errors.hours &&
@@ -206,6 +229,7 @@ const Create = () => {
 														type="number"
 														name="minutes"
 														placeholder="00"
+														onChange={onChange}
 														className={
 															"w-full bg-gray-100 rounded mt-2 p-3 whitespace-pre text-base border focus:bg-white" +
 															(errors.minutes &&

@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation, Redirect } from "react-router-dom";
+import { Switch, useHistory, Redirect } from "react-router-dom";
+import axios from "axios";
 import PrivateRoute from "./private";
 import PublicRoute from "./public";
 import { useSelector } from "react-redux";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import axios from "axios";
+import { getAuth } from "firebase/auth";
+import refreshToken from "../config/refreshToken";
 
 import AuthLogin from "../pages/Auth/Login";
 import AdminDashboard from "../pages/Admin/Dashboard";
@@ -23,21 +24,17 @@ import UserTimesheetCreate from "../pages/User/Timesheet/Create";
 function DefaultRoutes() {
 	const auth = getAuth();
 	const authState = useSelector((state) => state.auth);
+	const history = useHistory();
+
+	useEffect(() => {
+		history.listen(() => {
+			refreshToken({ auth, authState });
+		});
+	}, [history]);
 
 	axios.interceptors.request.use(
 		function (config) {
-			onAuthStateChanged(auth, (user) => {
-				if (user) {
-					if (authState.user) {
-						auth.currentUser.getIdToken().then((token) => {
-							window.localStorage.setItem("token", token);
-						});
-					} else {
-						window.localStorage.removeItem("token");
-					}
-				}
-			});
-
+			refreshToken({ auth, authState });
 			return config;
 		},
 		function (error) {
